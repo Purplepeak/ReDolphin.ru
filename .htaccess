@@ -1,0 +1,13 @@
+AddDefaultCharset utf-8
+RewriteEngine On
+
+RewriteBase /ReDolphin.ru/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
+
+
+php_value upload_max_filesize 60M
+
+
+
+
