@@ -61,15 +61,12 @@ class Thumbnail {
 			return false;
 		}
 		
-		$size = getimagesize($image);
-		self::$imageInfo = $size;
-		
-		if(!$size) {
+		if(!$size = getimagesize($image)) {
 			self::errorHeader("500");
 			header('Content-Type: text/html; charset=utf-8');
 			return false;
 		}
-		
+		self::$imageInfo = $size;
 		$type = $size['mime'];
 			
 		list($sourceWidth, $sourceHeight) = $size;

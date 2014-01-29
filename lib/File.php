@@ -31,16 +31,19 @@ class File {
 	}
 	
 	public function findById($id) {
-		$sth = $this->database->query("
+		
+		$sth = $this->database->prepare("
 				                      SELECT file_id, file_name, file_type, create_date, file_size, link  
-				                      FROM files WHERE file_id = ('$id') "
+				                      FROM files WHERE file_id = :id"
 		                              );
+		$sth->bindParam(':id', $id);
+		$sth->execute();
 		$sth->setFetchMode(PDO::FETCH_ASSOC);
 		$row = $sth->fetch();
 	
 		$this->name = $row['file_name'];
 		$this->type = $row['file_type'];
-		$this->date = $row['create_date'];
+		$this->date = strval($row['create_date']);
 		$this->size = $row['file_size'];
 		$this->link = $row['link'];
 	

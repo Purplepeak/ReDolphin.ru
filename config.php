@@ -7,10 +7,6 @@ $dbInfo = array(
 	'dbPass' => '901117'
 	);
 
-function spChars($variable) {
-	return htmlspecialchars($variable, ENT_QUOTES);
-}
-
 define('THUMBNAIL_WIDTH', 250);
 define('THUMBNAIL_HEIGHT', 250);
 ?>

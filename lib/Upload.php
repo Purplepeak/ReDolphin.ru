@@ -23,13 +23,18 @@ class Upload {
 	
 	public function saveUploadedFile($file) {
 		if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
+			
+			if (!$_FILES['userfile']['error'] === UPLOAD_ERR_OK) {
+				throw new UploadException($_FILES['userfile']['error']);
+			}
+			
 			$filename = $_FILES['userfile']['name'];
 			$newDir = $this->makeDir() . $filename;
 			if (!move_uploaded_file($_FILES['userfile']['tmp_name'], $newDir)) {
-				return false;
+				throw new UploadException('Не удалось переместить загруженный файл');
 			}
 		} else {
-			return false;
+			throw new UploadException('Файл загружен без использлвания HTTP POST');
 		}
 		
 		$file->name = $_FILES['userfile']['name'];

@@ -4,10 +4,12 @@ mb_internal_encoding('utf-8');
 date_default_timezone_set('Europe/Moscow');
 
 require 'framework/Slim/Slim.php';
-require 'lib/Upload.php';
+require 'lib/functions.php';
 require 'config.php';
+require 'lib/Upload.php';
 require 'lib/File.php';
 require 'lib/Thumbnail.php';
+require 'lib/UploadException.php';
 
 \Slim\Slim::registerAutoloader();
 
@@ -44,12 +46,17 @@ $app->get('/', function() use ($app) {
 $app->post('/upload', function() use ($app) {
 	$uploader = new Upload;
 	$file = new File($app->db);
-	$uploader->saveUploadedFile($file);
-	
+	try {
+		$uploader->saveUploadedFile($file);
+	} catch (UploadException $e) {
+		echo $e->getMessage();
+	}
 	$file->saveData();
 	$id = $file->id;
+	if (getimagesize($file->link)) {
+		Thumbnail::getResizedImage($file->link, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, "scale", $file->name);
+	}
 	
-	Thumbnail::getResizedImage($file->link, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, "scale", $file->name);
 	
 	$app->redirect(BASE_URL."/files/{$id}");
 });
@@ -63,6 +70,7 @@ $app->get('/files/:id', function($id) use ($app) {
 			'thumbnail' => $thumbnail
 	));
 });
+
 
 $app->run();
 ?>
