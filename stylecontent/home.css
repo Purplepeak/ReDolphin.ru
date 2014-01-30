@@ -46,3 +46,8 @@ a:hover {
 	color: #ffffff;
 }
 
+.alert {
+	position: relative;
+	text-align: center;
+}
+

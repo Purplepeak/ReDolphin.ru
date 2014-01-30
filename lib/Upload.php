@@ -23,7 +23,6 @@ class Upload {
 	
 	public function saveUploadedFile($file) {
 		if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
-			
 			if (!$_FILES['userfile']['error'] === UPLOAD_ERR_OK) {
 				throw new UploadException($_FILES['userfile']['error']);
 			}
@@ -34,7 +33,7 @@ class Upload {
 				throw new UploadException('Не удалось переместить загруженный файл');
 			}
 		} else {
-			throw new UploadException('Файл загружен без использлвания HTTP POST');
+			throw new UploadException('Вы не выбрали файл для загрузки. Либо загружаете его неправильно.');
 		}
 		
 		$file->name = $_FILES['userfile']['name'];

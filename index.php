@@ -17,6 +17,18 @@ $app = new \Slim\Slim(array(
     'dbInfo' => $dbInfo
     ));
 
+$app->add(new \Slim\Middleware\SessionCookie(array(
+		'expires' => '20 minutes',
+		'path' => '/',
+		'domain' => null,
+		'secure' => false,
+		'httponly' => false,
+		'name' => 'slim_session',
+		'secret' => 'CHANGE_ME',
+		'cipher' => MCRYPT_RIJNDAEL_256,
+		'cipher_mode' => MCRYPT_MODE_CBC
+)));
+
 define('BASE_URL', $app->request->getRootUri());
 
 $app->container->singleton('db', function() use($app) {
@@ -48,9 +60,12 @@ $app->post('/upload', function() use ($app) {
 	$file = new File($app->db);
 	try {
 		$uploader->saveUploadedFile($file);
-	} catch (UploadException $e) {
-		echo $e->getMessage();
+		
+	} catch (Exception $e) {
+		$app->flash('error', $e->getMessage());
+		$app->redirect(BASE_URL."/");
 	}
+	
 	$file->saveData();
 	$id = $file->id;
 	if (getimagesize($file->link)) {
@@ -69,6 +84,10 @@ $app->get('/files/:id', function($id) use ($app) {
 			'fileData' => $fileData,
 			'thumbnail' => $thumbnail
 	));
+});
+
+$app->get('/error', function() use ($app) {
+	$app->render('error_upload.php', array());
 });
 
 
