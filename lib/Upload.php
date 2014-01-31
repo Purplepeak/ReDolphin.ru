@@ -22,6 +22,10 @@ class Upload {
 	// Метод получает информацию о файле и присваивает ее объекту
 	
 	public function saveUploadedFile($file) {
+		if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($_POST) && empty($_FILES) && $_SERVER['CONTENT_LENGTH'] > 0) {
+			throw new UploadException('Размеры файла превышают допустимые.');
+		}
+		
 		if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
 			if (!$_FILES['userfile']['error'] === UPLOAD_ERR_OK) {
 				throw new UploadException($_FILES['userfile']['error']);

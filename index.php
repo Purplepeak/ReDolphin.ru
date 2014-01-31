@@ -61,7 +61,7 @@ $app->post('/upload', function() use ($app) {
 	try {
 		$uploader->saveUploadedFile($file);
 		
-	} catch (Exception $e) {
+	} catch (UploadException $e) {
 		$app->flash('error', $e->getMessage());
 		$app->redirect(BASE_URL."/");
 	}
