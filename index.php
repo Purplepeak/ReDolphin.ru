@@ -10,6 +10,8 @@ require 'lib/Upload.php';
 require 'lib/File.php';
 require 'lib/Thumbnail.php';
 require 'lib/UploadException.php';
+require "lib/ThumbnailException.php";
+require 'lib/Helper.php';
 
 \Slim\Slim::registerAutoloader();
 
@@ -30,6 +32,7 @@ $app->add(new \Slim\Middleware\SessionCookie(array(
 )));
 
 define('BASE_URL', $app->request->getRootUri());
+
 
 $app->container->singleton('db', function() use($app) {
 	$connetcionArray = $app->config('dbInfo');
@@ -68,26 +71,61 @@ $app->post('/upload', function() use ($app) {
 	
 	$file->saveData();
 	$id = $file->id;
-	if (getimagesize($file->link)) {
-		Thumbnail::getResizedImage($file->link, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, "scale", $file->name);
-	}
-	
-	
+
 	$app->redirect(BASE_URL."/files/{$id}");
 });
 
 $app->get('/files/:id', function($id) use ($app) {
+	
 	$fileData = new File($app->db);
 	$fileData->findById($id);
-	$thumbnail = BASE_URL .'/'. Thumbnail::link($fileData->link, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, 'scale');
-	$app->render('file_info.php', array(
-			'fileData' => $fileData,
-			'thumbnail' => $thumbnail
-	));
+	
+	/**
+	 * Если файл является картинкой, создаем ссылку на ее уменьшенную копию
+	 * при помощи библиотеки Thumbnail. По ссылке запускается скрипт, который 
+	 * собствнно создает эту копию.
+	 */
+	
+	if (getimagesize($fileData->link)) {
+		$thumbnail = new Thumbnail("uploads/{$id}");
+		$thumbnail->setAllowedSizes(THUMBNAIL_WIDTH . 'x' . THUMBNAIL_HEIGHT);
+		$thumbLink = BASE_URL .'/'. $thumbnail->link($fileData->link, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, MODE);
+		
+		$app->render('file_info.php', array(
+				'fileData' => $fileData,
+				'thumbnail' => $thumbLink
+		));
+	} else {
+		$app->render('file_info.php', array(
+				'fileData' => $fileData
+		));
+	}
 });
 
 $app->get('/error', function() use ($app) {
 	$app->render('error_upload.php', array());
+});
+
+$app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use($app) {
+	$imgPath = implode('/', $img);
+	$imgReg = '{(\\w+\\/\\d+\\/)(.+)}';
+	
+	preg_match($imgReg, $imgPath, $imageData);
+	
+	$imagePath = $imageData[0];
+	$thumbPath = $imageData[1];
+	
+    $resReg = '{(\\d+)x(\\d+)}';
+    
+    preg_match($resReg, $wh, $thumbRes);
+    
+    $thumbWidth = $thumbRes[1];
+    $thumbHeight = $thumbRes[2];
+    
+    $resizer = new Thumbnail("{$thumbPath}");
+    
+	$resizer->getResizedImage($imagePath, $thumbWidth, $thumbHeight, $mode);
+    
 });
 
 

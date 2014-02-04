@@ -9,4 +9,6 @@ $dbInfo = array(
 
 define('THUMBNAIL_WIDTH', 250);
 define('THUMBNAIL_HEIGHT', 250);
+define('MODE', 'scale');
+define('MAX_FILESIZE', 60)
 ?>

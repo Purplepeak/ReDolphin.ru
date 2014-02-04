@@ -8,7 +8,9 @@
     <link rel="shortcut icon" href="<?= BASE_URL ?>/stylecontent/icon.png">
     <link href="<?= BASE_URL ?>/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/stylecontent/home.css" rel="stylesheet">
-
+    
+    <script src = "<?= BASE_URL ?>/js/checkFileSize.js"></script>   
+    
   </head>
   <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

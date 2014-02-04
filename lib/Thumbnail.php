@@ -2,9 +2,19 @@
 class Thumbnail {
 	const MODE_SCALE = "scale";
 	const MODE_CROP = "crop";
-	private static $thumbPath = "thumbnails";
-	public static $sourcePath;
-	public static $imageInfo;
+	private $thumbPath;
+	
+	public function __construct($thumbPath) {
+		$this->thumbPath = $thumbPath;
+	}
+	
+	/**
+	 * Массив $allowSize содержит допустимые размеры превью и  может быть получен методом setAllowedSizes().
+	 * Если ограничение установлено не было, разрешается создавать превью любых размеров. 
+	 * Формат передаваемых массиву значений 100x100, 100x100/230x250 и т.д.  
+	 */
+	
+	public $allowSizes;
 	
 	public static function errorHeader($error) {
 		$http_protocol = $_SERVER['SERVER_PROTOCOL'];
@@ -16,57 +26,72 @@ class Thumbnail {
 		return header($http[$error]);
 	}
 	
-	public static function link($image, $thumbWidth, $thumbHeight, $mode) {
+	/**
+	 * Метод создает ссылку на превью изображения. Проверяем правильность режима сжатия
+	 * и было ли установлено ограничение по размерам превью.
+	 */
+	
+	public function link($image, $thumbWidth, $thumbHeight, $mode) {
+		$link = $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$image}";
 		if (($mode != self::MODE_SCALE) && ($mode != self::MODE_CROP)) {
 			self::errorHeader("404");
+			throw new ThumbnailException("Указанный режим сжатия '{$mode}' не поддерживается.");
 			return false;
-		} else {
-			$nameReg = '{([^\\.\\/]+)\\/([^\\.\\/]+[.][a-z]+)}';
-			$imageInfo = array();
-			preg_match($nameReg, $image, $imageInfo);
-			self::$sourcePath = $imageInfo[1];
-			$filename = $imageInfo[2];
-			if(($thumbWidth === 100 && $thumbHeight === 100) || ($thumbWidth === 200 && $thumbHeight === 200) || ($thumbWidth === 250 && $thumbHeight === 250) || ($thumbWidth === 130 && $thumbHeight === 200)) {
-				$link = self::$thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$filename}";
+		} elseif ($this->allowSizes) {
+			if($this->checkAllowsizes($thumbWidth, $thumbHeight) === true) {
 				return $link;
 			} else {
 				self::errorHeader("404");
+				throw new ThumbnailException("Размеры превью '{$thumbWidth}x{$thumbHeight}' не соответствуют допустимым.");
 				return false;
 			}
+		} else {
+			return $link;
 		}
 	}
 	
-	private static function saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $imageName) {
+	/**
+	 * Метод сохраняет превью в папку назначения.
+	 */
+	
+	private function saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $imageName) {
 		switch($type) {
 			case "image/jpeg":
 				self::errorHeader("200");
-				return imagejpeg($thumb, self::$thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				return imagejpeg($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
 				break;
 			case "image/png":
 				self::errorHeader("200");
-				return imagepng($thumb, self::$thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				return imagepng($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
 				break;
 			case "image/gif":
 				self::errorHeader("200");
-				return imagegif($thumb, self::$thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				return imagegif($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
 				break;
 		}
 	}
 	
-	public static function getResizedImage($image, $thumbWidth, $thumbHeight, $mode, $imageName) {
-	
+	public function getResizedImage($image, $thumbWidth, $thumbHeight, $mode) {
+		$nameReg = '{(.+\\/)(([^\\.\\/]+)[.][a-z]+)}';
+		preg_match($nameReg, $image, $imagePath);
+		$dir = $this->thumbPath . "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imagePath[1]}"; 
+		if (!file_exists($dir)) {
+			mkdir($dir, 0777, true);
+		}
 		if(!is_readable($image)) {
 			self::errorHeader("404");
-			header('Content-Type: text/html; charset=utf-8');
+			throw new ThumbnailException("Файл отсутствует или недоступен для чтения.");
 			return false;
 		}
 		
-		if(!$size = getimagesize($image)) {
+		$size = getimagesize($image);
+		
+		if(!$size) {
 			self::errorHeader("500");
-			header('Content-Type: text/html; charset=utf-8');
+			throw new ThumbnailException("Ошибка чтения фала. Убедитесь, что ваш файл является картинкой.");
 			return false;
 		}
-		self::$imageInfo = $size;
+		
 		$type = $size['mime'];
 			
 		list($sourceWidth, $sourceHeight) = $size;
@@ -83,7 +108,7 @@ class Thumbnail {
 				break;
 			default:
 				self::errorHeader("500");
-				header('Content-Type: text/html; charset=utf-8');
+				throw new ThumbnailException("Формат выбранного изображения не поддерживается.");
 				return false;
 		}
 		
@@ -116,7 +141,7 @@ class Thumbnail {
 				    $sourceWidth, 
 				    $sourceHeight
 		);
-				self::saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $imageName);
+				$this->saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $image);
 				break;
 		
 			case self::MODE_SCALE:
@@ -142,10 +167,35 @@ class Thumbnail {
 				    $sourceWidth, 
 				    $sourceHeight
 		);
-				self::saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $imageName);
+				$this->saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $image);
 				break;
 			default:
 				return false;
+		}
+	}
+	
+	public function setAllowedSizes($allowSizes) {
+		$sizeReg = '{(\\d+)x(\\d+)\\/?(\\d+)?x?(\\d+)?\\/?(\\d+)?x?(\\d+)?\\/?(\\d+)?x?(\\d+)?\\/?(\\d+)?x?(\\d+)?}';
+		preg_match($sizeReg, $allowSizes, $sizeData);
+		array_shift($sizeData);
+		//var_dump($sizeData);
+		$allowed = array();
+		foreach ($sizeData as $key => $value) {
+			array_push($allowed, intval($sizeData[$key]));
+		}
+		//var_dump($allowed);
+		$this->allowSizes = $allowed;
+	}
+
+	/**
+	 * Метод сравнивает допустимые параметры превью с указанными.
+	 */
+	
+	public function checkAllowsizes($width, $height) {
+		for($i=0; $i < count($this->allowSizes); $i++) {
+			if(($width === $this->allowSizes[$i] && $height === $this->allowSizes[$i+1])) {
+				return true;
+			}
 		}
 	}
 }

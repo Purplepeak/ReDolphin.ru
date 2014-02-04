@@ -46,15 +46,12 @@ class File {
 		$this->date = strval($row['create_date']);
 		$this->size = $row['file_size'];
 		$this->link = $row['link'];
-	
 	}
 	
-    public function formatBytes() {
-		$base = log($this->size) / log(1024);
-		$suffixes = array('Б', 'КБ', 'МБ');
-		$precision = 2;
-		
-		return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+	public function imageFile() {
+		if (getimagesize($this->link)) {
+			return true;
+		}
 	}
 }
 ?>
