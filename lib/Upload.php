@@ -65,7 +65,7 @@ class Upload {
 		
 		$nameReg = '{(.*)\\.(.+)}ui';
 		if(!preg_match($nameReg, $name, $nameArray)) {
-			throw new UploadException('Регулярное выражение не c совпадает именем файла.');
+			throw new Exception('Регулярное выражение не c совпадает именем файла.');
 		}
 		$safeName = $nameArray[1];
 		$safeName = preg_replace('{[^a-zA-Zа-яёА-ЯЁ0-9]}ui', '', $safeName);
