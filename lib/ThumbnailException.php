@@ -6,7 +6,7 @@ class ThumbnailException extends Exception
 	}
 	
 	function __toString() {
-		return "{$this->getMessage()} \n {$this->getTraceAsString()}";
+		return "{$this->getMessage()} {$this->getTraceAsString()}";
 	}
 }
 ?>
