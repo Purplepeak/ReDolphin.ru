@@ -67,14 +67,13 @@ class Upload {
 		if(!preg_match($nameReg, $name, $nameArray)) {
 			throw new Exception('Регулярное выражение не c совпадает именем файла.');
 		}
-		$safeName = $nameArray[1];
-		$safeName = preg_replace('{[^a-zA-Zа-яёА-ЯЁ0-9]}ui', '', $safeName);
-		$safeName = $safeName . ".{$nameArray[2]}";
+		$prettyName = $nameArray[1];
+		$prettyName = $prettyName . ".{$nameArray[2]}";
 		
 		$uniqName = uniqid('file') . ".{$nameArray[2]}";
 		
 		return array(
-				     'safe' => $safeName, 
+				     'safe' => $prettyName, 
 				     'uniq' => $uniqName
 		            );
 	}
