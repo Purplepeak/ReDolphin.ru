@@ -13,6 +13,4 @@
         <p>Дата загрузки: <?= spChars($fileData->date) ?></p>
       </div>
     </div>
-  </body>
-</html>
 <?php include 'footer.php';?>
