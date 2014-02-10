@@ -1,21 +1,16 @@
-function showFileSize() {
+function showFileSize(maxFileSize) {
     var input, file;
-    if (!window.FileReader) {
-        bodyAppend("div", "Необходим современный браузер для работы с нашим ресурсом. Мы рекомендуем последние версии Chrome и Mozilla.");
-        return false;
-    }
 
     input = document.getElementById('fileinput');
     if (!input.files) {
-        bodyAppend("div", "Необходим современный браузер для работы с нашим ресурсом. Мы рекомендуем последние версии Chrome и Mozilla.");
-        return false;
+        return true;
     } else if (!input.files[0]) {
-        bodyAppend("div", "Вы не выбрали файл.");
+        bodyAppend("div", "Вы не выбрали файл, который необходимо загрузить. Пожалуйста, повторите попытку.");
         return false;
     } else {
         file = input.files[0];
-        if (file.size > 60 * 1024 * 1024) {
-            bodyAppend("div", "Размер загружаемого файла должен быть не более 60 МБ.");
+        if (file.size > maxFileSize * 1024 * 1024) {
+            bodyAppend("div", "Размер загружаемого файла должен быть не более " + maxFileSize + " МБ.");
             document.upload_form.reset();
             return false;
         }

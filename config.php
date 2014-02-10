@@ -7,8 +7,12 @@ $dbInfo = array(
 	'dbPass' => '901117'
 	);
 
-define('THUMBNAIL_WIDTH', 250);
-define('THUMBNAIL_HEIGHT', 250);
-define('MODE', 'scale');
-define('MAX_FILESIZE', 60)
+$thumbSettings = array(
+	'thumbWidth' => 250,
+	'thumbHeight' => 250,
+	'thumbMode' => 'scale'
+    );
+
+$maxFileSize = 60;
+$uplaodPath = 'uploads';
 ?>

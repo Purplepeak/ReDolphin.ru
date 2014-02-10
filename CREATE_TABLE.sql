@@ -10,12 +10,14 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `files` (
   `file_id` int(11) NOT NULL AUTO_INCREMENT,
   `file_name` varchar(200) NOT NULL,
-  `file_type` varchar(60) DEFAULT NULL,
+  `uniq_name` varchar(60) NOT NULL,
+  `file_type` varchar(60) NOT NULL,
   `create_date` datetime NOT NULL,
   `file_size` bigint(20) NOT NULL,
   `link` varchar(100) NOT NULL,
+  `thumb_link` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`file_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

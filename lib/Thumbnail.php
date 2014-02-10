@@ -9,12 +9,13 @@ class Thumbnail {
 	}
 	
 	/**
-	 * Массив $allowSize содержит допустимые размеры превью и  может быть получен методом setAllowedSizes().
+	 * Массив $allowedSizes содержит допустимые размеры превью и  может быть получен методом setAllowedSizes().
 	 * Если ограничение установлено не было, разрешается создавать превью любых размеров. 
-	 * Формат передаваемых массиву значений 100x100, 100x100/230x250 и т.д.  
+	 * Допустимые значения передаются setAllowedSizes() в виде массива:
+	 * array('100x100', '230x250' и т.д).  
 	 */
 	
-	public $allowSizes;
+	public $allowedSizes = array();
 	
 	public static function errorHeader($error) {
 		$http_protocol = $_SERVER['SERVER_PROTOCOL'];
@@ -23,7 +24,7 @@ class Thumbnail {
 				"404" => $http_protocol ." 404 Not Found",
 				"500" => $http_protocol ." 500 Internal Server Error"
 		);
-		return header($http[$error]);
+		header($http[$error]);
 	}
 	
 	/**
@@ -34,16 +35,12 @@ class Thumbnail {
 	public function link($image, $thumbWidth, $thumbHeight, $mode) {
 		$link = $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$image}";
 		if (($mode != self::MODE_SCALE) && ($mode != self::MODE_CROP)) {
-			self::errorHeader("404");
 			throw new ThumbnailException("Указанный режим сжатия '{$mode}' не поддерживается.");
-			return false;
-		} elseif ($this->allowSizes) {
-			if($this->checkAllowsizes($thumbWidth, $thumbHeight) === true) {
+		} elseif ($this->allowedSizes) {
+			if($this->isAllowedSize($thumbWidth, $thumbHeight) === true) {
 				return $link;
 			} else {
-				self::errorHeader("404");
 				throw new ThumbnailException("Размеры превью '{$thumbWidth}x{$thumbHeight}' не соответствуют допустимым.");
-				return false;
 			}
 		} else {
 			return $link;
@@ -58,38 +55,41 @@ class Thumbnail {
 		switch($type) {
 			case "image/jpeg":
 				self::errorHeader("200");
-				return imagejpeg($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				imagepng($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				header('Content-Type: image/jpeg');
+				readfile($this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
 				break;
 			case "image/png":
 				self::errorHeader("200");
-				return imagepng($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				imagepng($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				header('Content-Type: image/png');
+				readfile($this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
 				break;
 			case "image/gif":
 				self::errorHeader("200");
-				return imagegif($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				imagegif($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				header('Content-Type: image/gif');
+				readfile($this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
 				break;
 		}
 	}
 	
 	public function getResizedImage($image, $thumbWidth, $thumbHeight, $mode) {
-		$nameReg = '{(.+\\/)(([^\\.\\/]+)[.][a-z]+)}';
-		preg_match($nameReg, $image, $imagePath);
-		$dir = $this->thumbPath . "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imagePath[1]}"; 
+		$srcPath = dirname($image);
+		$dir = $this->thumbPath . "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$srcPath}"; 
 		if (!file_exists($dir)) {
 			mkdir($dir, 0777, true);
 		}
 		if(!is_readable($image)) {
 			self::errorHeader("404");
-			throw new ThumbnailException("Файл отсутствует или недоступен для чтения.");
-			return false;
+			throw new ThumbnailException("Файл {$image} отсутствует или недоступен для чтения.");
 		}
 		
 		$size = getimagesize($image);
 		
 		if(!$size) {
 			self::errorHeader("500");
-			throw new ThumbnailException("Ошибка чтения фала. Убедитесь, что ваш файл является картинкой.");
-			return false;
+			throw new ThumbnailException("Ошибка чтения фалйа {$image}. Убедитесь, что ваш файл является картинкой.");
 		}
 		
 		$type = $size['mime'];
@@ -108,15 +108,19 @@ class Thumbnail {
 				break;
 			default:
 				self::errorHeader("500");
-				throw new ThumbnailException("Формат выбранного изображения не поддерживается.");
-				return false;
+				throw new ThumbnailException("Формат {$type} выбранного изображения не поддерживается.");
 		}
 		
 		$sourceRatio = $sourceWidth / $sourceHeight;
 		$thumbRatio = $thumbWidth / $thumbHeight;
 		$thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
-		
-	
+		/*
+		if ($type === "image/gif" || $type === "image/png") {
+			imagecolortransparent($thumb, imagecolorallocate($thumb, 0, 0, 0));
+			imagealphablending($thumb, false);
+			imagesavealpha($thumb,true);
+		}
+	    */
 		switch($mode) {
 			case self::MODE_CROP:
 				if ($sourceWidth <= $thumbWidth && $sourceHeight <= $thumbHeight) {
@@ -174,26 +178,29 @@ class Thumbnail {
 		}
 	}
 	
-	public function setAllowedSizes($allowSizes) {
-		$sizeReg = '{(\\d+)x(\\d+)\\/?(\\d+)?x?(\\d+)?\\/?(\\d+)?x?(\\d+)?\\/?(\\d+)?x?(\\d+)?\\/?(\\d+)?x?(\\d+)?}';
-		preg_match($sizeReg, $allowSizes, $sizeData);
-		array_shift($sizeData);
-		//var_dump($sizeData);
-		$allowed = array();
-		foreach ($sizeData as $key => $value) {
-			array_push($allowed, intval($sizeData[$key]));
+	public function setAllowedSizes($allowedSizes) {
+		foreach ($allowedSizes as $value) {
+			$sizeReg = '{(\\d+)x(\\d+)}';
+			if(!preg_match($sizeReg, $value, $regArray)) {
+				throw new ThumbnailException(
+						                     "Неверный формат передаваемых методу setAllowedSizes() размеров превью. 
+						                     Аргумент должен быть массивом: array('100x100', '230x250' и т.д)."
+		                                    );
+			}
+			array_shift($regArray);
+			$sizes = array_map('intval', $regArray);
+			array_push($this->allowedSizes, $sizes);
 		}
-		//var_dump($allowed);
-		$this->allowSizes = $allowed;
 	}
 
 	/**
 	 * Метод сравнивает допустимые параметры превью с указанными.
 	 */
 	
-	public function checkAllowsizes($width, $height) {
-		for($i=0; $i < count($this->allowSizes); $i++) {
-			if(($width === $this->allowSizes[$i] && $height === $this->allowSizes[$i+1])) {
+	public function isAllowedSize($width, $height) {
+		
+		foreach ($this->allowedSizes as $value) {
+			if($width === $value[0] && $height === $value[1]) {
 				return true;
 			}
 		}
