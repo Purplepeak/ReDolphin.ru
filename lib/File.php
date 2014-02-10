@@ -66,7 +66,7 @@ class File {
 		$sth->execute();
 	}
 	
-	public function isHasThumbnail() {
+	public function hasThumbnail() {
 		if(is_null($this->thumbLink)) {
 			return false;
 		} else {
