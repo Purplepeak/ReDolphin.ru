@@ -1,53 +1,171 @@
+html, body {height: 100%;}
+
+.table {
+	display:table; 
+	height:100%;
+}
+
+.cell {
+    display:table-cell;
+    vertical-align:middle;
+}
 .upload {
-	position: relative;
-	top: 400px;
-	left: 650px;
-}
-
-.download {
-	position: relative;
-	top: 50px;
-	left: 10px;
-}
-
-.file-info {
-	position: relative;
-	top: 10px;
-	left: 0px;
-}
-
-a:hover { 
-    text-decoration: none; 
-   }
-
-.button{
-	border: 2px solid #000000;
-	position: relative;
-	top: 5px;
-	border-radius: 5px;
-	background-color: #161616;
-	height: 30px;
-	width: 150px;
-	
-}
-
-.button p{
-	position: relative;
-	font-size: 0.8em;
-	color: #acd1b2;
-	text-align: center;
-}
-
-.bold{
-	font-family: tahoma;
-	font-weight: bold;
-	font-size: 1.2em;
-	font-variant: small-caps;
-	color: #ffffff;
+    max-width:50em;
+    margin:0 auto;
 }
 
 .alert {
-	position: relative;
+	position: absolute;
+	top:0; left:0; right:0;
+	margin-top: 110px;
 	text-align: center;
 }
 
+.upload_form {
+	position:relative;
+}
+
+.file-input-wrapper,  .submit{
+    
+    text-align: center; 
+    overflow: hidden; 
+    width: 200px; 
+    height: 40px; 
+    background-color: #f0f0f0;
+    border: 1px solid transparent;
+	display: inline-block;
+	margin-left: 50px;
+	
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9) );
+	background:-moz-linear-gradient( center top, #f9f9f9 5%, #e9e9e9 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9');
+	background-color:#f9f9f9;
+	-webkit-border-top-left-radius:20px;
+	-moz-border-radius-topleft:20px;
+	border-top-left-radius:20px;
+	-webkit-border-top-right-radius:20px;
+	-moz-border-radius-topright:20px;
+	border-top-right-radius:20px;
+	-webkit-border-bottom-right-radius:20px;
+	-moz-border-radius-bottomright:20px;
+	border-bottom-right-radius:20px;
+	-webkit-border-bottom-left-radius:20px;
+	-moz-border-radius-bottomleft:20px;
+	border-bottom-left-radius:20px;
+	text-indent:0;
+	border:1px solid #dcdcdc;
+}
+    
+.btn-file-input, .submit {
+    color:#14181f;
+	font-family:Georgia;
+	font-size:15px;
+	font-weight:bold;
+	font-style:normal;
+	line-height:40px;
+	text-decoration:none;
+}
+
+
+.file {
+    width: 230px;
+    cursor: pointer;
+    margin-top: -50px; 
+    -moz-opacity: 0; 
+    filter: alpha(opacity=0); 
+    opacity: 0; 
+    font-size: 150px; 
+    height: 50px;
+    display: inline-block;
+}
+
+.file::-webkit-file-upload-button { 
+      cursor:pointer; 
+}
+
+.file-input-wrapper {
+	position: absolute;
+	top:0; left:0;
+}
+
+.submit {
+	position: absolute;
+	top:0; right:0;
+	margin-right: 50px;
+}
+
+.file-input-wrapper:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9) );
+	background:-moz-linear-gradient( center top, #e9e9e9 5%, #f9f9f9 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9');
+	background-color:#e9e9e9;
+}
+
+.submit:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9) );
+	background:-moz-linear-gradient( center top, #e9e9e9 5%, #f9f9f9 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9');
+	background-color:#e9e9e9;
+}
+
+.navbar {
+  background-color: #28477d;
+  border-color: transparent;
+}
+
+.navbar-inverse {
+  color: #ffffff;
+  background-color: #28477d;
+}
+
+.tab:hover {
+  background-color:#0a47b0;
+} 
+
+.warning {
+	text-align: center;
+}
+
+.upload_form {
+	text-align: center;
+}
+
+.ie .table {
+	position: absolute;
+	top:0; left:0; right:0;
+	margin-top: 360px;
+	
+}
+
+.download {
+	margin-top: 75px;
+	margin-left: 7px;
+}
+
+.file-info {
+	margin-top: 10px;
+	margin-left: 2px;
+}
+
+a.button {
+    text-decoration: none;
+}
+
+a.download-string {
+	text-decoration: none;
+}
+
+
+
+.button{
+	border: 2px solid #000000;
+	border-radius: 10px;
+	background-color: #161616;
+	display: block;
+    height: 50px;
+    width: 150px;
+    color: #FFFFFF;
+    text-align: center;
+    font: bold 1.2em/48px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+	
+}
