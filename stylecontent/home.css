@@ -1,3 +1,6 @@
+
+/*Центрируем элемент по вертикали и горизонтали*/
+
 html,body {
 	height: 100%;
 }
@@ -26,9 +29,7 @@ html,body {
 	text-align: center;
 }
 
-.upload_form {
-	position: relative;
-}
+/*Прячем дефолтную кнопку загрузки файла за красивую.*/
 
 .file-input-wrapper,.submit {
 	text-align: center;
@@ -38,7 +39,6 @@ html,body {
 	background-color: #f0f0f0;
 	border: 1px solid transparent;
 	display: inline-block;
-	margin-left: 50px;
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
 	background: -moz-linear-gradient(center top, #f9f9f9 5%, #e9e9e9 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9',endColorstr='#e9e9e9');
@@ -85,10 +85,17 @@ html,body {
 	cursor: pointer;
 }
 
+/*Выравниваем кнопки выбора и отправки файла.*/
+
+.upload_form {
+	position: relative;
+}
+
 .file-input-wrapper {
 	position: absolute;
 	top: 0;
 	left: 0;
+	margin-left: 50px;
 }
 
 .submit {
@@ -97,6 +104,7 @@ html,body {
 	right: 0;
 	margin-right: 50px;
 }
+
 
 .file-input-wrapper:hover {
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
@@ -133,6 +141,8 @@ html,body {
 .upload_form {
 	text-align: center;
 }
+
+/*Выравниваем формы на случай браузера моложе IE8*/
 
 .ie .table {
 	position: absolute;
