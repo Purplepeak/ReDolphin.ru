@@ -40,7 +40,7 @@ class Thumbnail {
 			if($this->isAllowedSize($thumbWidth, $thumbHeight) === true) {
 				return $link;
 			} else {
-				throw new ThumbnailException("Размеры превью '{$thumbWidth}x{$thumbHeight}' не соответствуют допустимым.");
+				throw new ThumbnailException("Preview size '{$thumbWidth}x{$thumbHeight}' not allowed.");
 			}
 		} else {
 			return $link;
@@ -67,7 +67,7 @@ class Thumbnail {
 				break;
 			case "image/gif":
 				self::errorHeader("200");
-				imagegif($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+				imagepng($thumb, $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
 				header('Content-Type: image/gif');
 				readfile($this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
 				break;
@@ -114,13 +114,13 @@ class Thumbnail {
 		$sourceRatio = $sourceWidth / $sourceHeight;
 		$thumbRatio = $thumbWidth / $thumbHeight;
 		$thumb = imagecreatetruecolor($thumbWidth, $thumbHeight);
-		/*
-		if ($type === "image/gif" || $type === "image/png") {
-			imagecolortransparent($thumb, imagecolorallocate($thumb, 0, 0, 0));
-			imagealphablending($thumb, false);
-			imagesavealpha($thumb,true);
-		}
-	    */
+		
+		imagealphablending($thumb, false);
+		$transparent = imagecolorallocatealpha($thumb, 0, 0, 0, 127);
+		imagesavealpha($thumb, true);
+		imagefilledrectangle($thumb, 0, 0, $thumbWidth, $thumbHeight, $transparent);
+		
+	    
 		switch($mode) {
 			case self::MODE_CROP:
 				if ($sourceWidth <= $thumbWidth && $sourceHeight <= $thumbHeight) {

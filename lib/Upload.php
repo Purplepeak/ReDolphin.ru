@@ -2,9 +2,11 @@
 class Upload {
 	private $uploadPath;
 	private $fileDir;
+	private $host;
 	
-	public function __construct($uploadPath) {
+	public function __construct($uploadPath, $host) {
 		$this->uploadPath = $uploadPath;
+		$this->host = $host;
 	}
 	
 	private function makeDir($id) {
@@ -36,19 +38,19 @@ class Upload {
 			
 			$newName = $this->getSafeName($_FILES['userfile']['name'], $_FILES['userfile']['tmp_name']);
 			
-			$file->name = $newName['safe'];
-			$file->uniqName = $newName['uniq'];
+			$file->name = $newName['pretty'];
+			$file->uniqName = $newName['safe'];
 			$file->size = $_FILES['userfile']['size'];
 			$file->date = date('Y-m-d G:i:s');
 			$file->type = $_FILES['userfile']['type'];
 			
 			$file->saveData();
 	        
-			$newDir = $this->makeDir($file->id) . $newName['uniq'];
+			$newDir = $this->makeDir($file->id) . $newName['safe'];
 			$file->link = $newDir;
 			$file->addData('link', $file->link, $file->id);
 			
-			if (!move_uploaded_file($_FILES['userfile']['tmp_name'], $newDir)) {
+			if (!move_uploaded_file($_FILES['userfile']['tmp_name'], encodeThis($newDir, $this->host))) {
 				throw new UploadException('Не удалось переместить загруженный файл');
 			}
 			
@@ -63,20 +65,29 @@ class Upload {
 		//$mime = $finfo->file($tmpName);
 		//$mimeReg = '{([a-z]+)\\/(.+)}';
 		
-		$nameReg = '{(.*)\\.(.+)}ui';
-		if(!preg_match($nameReg, $name, $nameArray)) {
-			throw new Exception('Регулярное выражение не c совпадает именем файла.');
+		$nameReg = '{(.*)(\\..+)}ui';
+		if(preg_match($nameReg, $name, $nameArray)) {
+			$fileName = $nameArray[1];
+			$fileExt = $nameArray[2];
+		} else {
+			$fileName = $name;
+			$fileExt = '';
 		}
-		$prettyName = $nameArray[1];
-		$prettyName = $prettyName . ".{$nameArray[2]}";
 		
-		$uniqName = uniqid('file') . ".{$nameArray[2]}";
+		$prettyName = $fileName . "{$fileExt}";
+		
+		if (!$fileName) {
+			$fileName = uniqid();
+			$prettyName = $fileExt;
+		}
+		
+		$safeName = preg_replace('/[^a-zA-ZА-ЯЁа-яё0-9]/ui', '', $fileName) . "{$fileExt}";
+		//$safeName = useTranslit($safeName);
 		
 		return array(
-				     'safe' => $prettyName, 
-				     'uniq' => $uniqName
+				     'pretty' => $prettyName, 
+				     'safe' => $safeName
 		            );
 	}
-	
 }
 ?>

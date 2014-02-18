@@ -1,26 +1,23 @@
-function showFileSize(maxFileSize) {
+function showFileSize(maxFileSize, form) {
     var input, file;
 
-    input = document.getElementById('fileinput');
-    if (!input.files) {
-        return true;
-    } else if (!input.files[0]) {
-        bodyAppend("div", "Вы не выбрали файл, который необходимо загрузить. Пожалуйста, повторите попытку.");
-        return false;
+    input = form.elements.userfile;
+    if (input.files[0]) {
+    	if (input.files[0].size > maxFileSize * 1024 * 1024) {
+    		bodyAppend("div", "Размер загружаемого файла должен быть не более " + maxFileSize + " МБ.");
+    		form.reset();
+    		return false;
+    	}
     } else {
-        file = input.files[0];
-        if (file.size > maxFileSize * 1024 * 1024) {
-            bodyAppend("div", "Размер загружаемого файла должен быть не более " + maxFileSize + " МБ.");
-            document.upload_form.reset();
-            return false;
-        }
+    	bodyAppend("div", "Вы не выбрали файл, который необходимо загрузить. Пожалуйста, повторите попытку.");
+    	return false;
     }
 }
 
 // Функция выводит на экран предупреждающее сообщение
 
 function bodyAppend(div, innerHTML) {
-    var parentDiv = document.body.children[2];
+    var parentDiv = document.getElementById('alert-message');
     var elem = parentDiv.children[0];
     if (elem) {
         remove(elem);
