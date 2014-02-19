@@ -15,113 +15,44 @@ html,body {
 	vertical-align: middle;
 }
 
-.upload {
-	max-width: 50em;
+.rd-upload {
+	max-width: 60em;
 	margin: 0 auto;
+	height:auto;
 }
 
-.alert {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	margin-top: 110px;
+.rd-alert {
+	width:100%;
 	text-align: center;
 }
-
-/*Прячем дефолтную кнопку загрузки файла за красивую.*/
-
-.file-input-wrapper, .submit, .button {
-	text-align: center;
-	overflow: hidden;
-	width: 200px;
-	height: 40px;
-	border: 1px solid transparent;
-	display: inline-block;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
-	background: -moz-linear-gradient(center top, #f9f9f9 5%, #e9e9e9 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9',endColorstr='#e9e9e9');
-	background-color: #f9f9f9;
-	-webkit-border-top-left-radius: 20px;
-	-moz-border-radius-topleft: 20px;
-	border-top-left-radius: 20px;
-	-webkit-border-top-right-radius: 20px;
-	-moz-border-radius-topright: 20px;
-	border-top-right-radius: 20px;
-	-webkit-border-bottom-right-radius: 20px;
-	-moz-border-radius-bottomright: 20px;
-	border-bottom-right-radius: 20px;
-	-webkit-border-bottom-left-radius: 20px;
-	-moz-border-radius-bottomleft: 20px;
-	border-bottom-left-radius: 20px;
-	text-indent: 0;
-	border: 1px solid #dcdcdc;
-}
-
-.btn-file-input, .submit, .button {
-	color: #14181f;
-	font-family: Georgia, Arial, Helvetica, Geneva, sans-serif;
-	font-size: 15px;
-	font-weight: bold;
-	font-style: normal;
-	line-height: 40px;
-	text-decoration: none;
-}
-
-.file {
-	width: 230px;
-	cursor: pointer;
-	margin-top: -50px;
-	-moz-opacity: 0;
-	filter: alpha(opacity = 0);
-	opacity: 0;
-	font-size: 150px;
-	height: 50px;
-	display: inline-block;
-}
-
-.file::-webkit-file-upload-button {
-	cursor: pointer;
-}
-
-/*Выравниваем кнопки выбора и отправки файла.*/
 
 .upload_form {
-	position: relative;
+	overflow:hidden;
+	width:100%;
 }
 
-.file-input-wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	margin-left: 50px;
-}
-
-.submit {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin-right: 50px;
-}
-
-
-.file-input-wrapper:hover {
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
-	background: -moz-linear-gradient(center top, #e9e9e9 5%, #f9f9f9 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9',endColorstr='#f9f9f9');
-	background-color: #e9e9e9;
-}
-
-.submit:hover {
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
-	background: -moz-linear-gradient(center top, #e9e9e9 5%, #f9f9f9 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9',endColorstr='#f9f9f9');
-	background-color: #e9e9e9;
-}
+/*NAVBAR**********************/
 
 .navbar {
 	background-color: #28477d;
 	border-color: transparent;
+}
+
+.navbar .nav > li > a {
+	color:#ffffff;
+}
+
+.navbar .nav > li > a:hover {
+	font: bold 1.6em Georgia;
+	font-weight:bold;
+	font-size:16px;
+	font-style:normal;
+	color:#9e959e;
+}
+
+.navbar-inverse .navbar-brand {
+	font: bold 1.6em Georgia, Arial, Helvetica, Geneva, sans-serif;
+	color:#ffffff;
 }
 
 .navbar-inverse {
@@ -129,12 +60,16 @@ html,body {
 	background-color: #28477d;
 }
 
-.tab:hover {
+.rd-tab:hover {
 	background-color: #0a47b0;
 }
 
-.warning {
+/*MAIN PAGE**********************/
+
+.rd-warning {
+	font-size: 13px;
 	text-align: center;
+	color: #666;
 }
 
 .upload_form {
@@ -144,16 +79,18 @@ html,body {
 /*Выравниваем формы на случай браузера моложе IE8*/
 
 .ie .table {
-	position: absolute;
+	display:absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	margin-top: 360px;
 }
 
-.download {
+/*FILE INFO**********************/
+
+.rd-download {
 	margin-top: 75px;
-	margin-left: 7px;
+	margin-left: 7px;s
 }
 
 .file-info {
@@ -161,7 +98,7 @@ html,body {
 	margin-left: 2px;
 }
 
-a.button:hover {
+a.rd-button:hover {
 	color:#ffffff;
 	background-color: #193057;
 	text-decoration: none;
@@ -173,7 +110,7 @@ a.download-string {
 	text-decoration: none;
 }
 
-.button {
+.rd-button {
 	margin-top: 7px;
 	display: block;
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #28477d), color-stop(1, #28477d) );

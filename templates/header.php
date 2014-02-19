@@ -1,16 +1,19 @@
 <!DOCTYPE html>
+
+<!--[if lt IE 8]><html class="ie"><![endif]-->
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    
     <title>ReDolphin - ЗАЛИВАЙ</title>
-    
     <link rel="shortcut icon" href="<?= BASE_URL ?>/stylecontent/icon.png">
     <link href="<?= BASE_URL ?>/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/stylecontent/custom-input.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/stylecontent/home.css" rel="stylesheet">
-    <!--[if lt IE 8]><html class="ie"><![endif]-->
-    
-    <script src = "<?= BASE_URL ?>/js/checkFileSize.js"></script>   
+    <script src = "<?= BASE_URL ?>/js/checkFileSize.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="<?= BASE_URL ?>/js/js-custom-input-file.js"></script>
+    <script src="<?= BASE_URL ?>/bootstrap/js/bootstrap.min.js"></script>
     
   </head>
   <body>
@@ -27,8 +30,8 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="tab"><a href="<?= BASE_URL ?>">Главная</a></li>
-            <li class="tab"><a href="">Файлы</a></li>
+            <li class="rd-tab"><a href="<?= BASE_URL ?>/">Главная</a></li>
+            <li class="rd-tab"><a href="">Файлы</a></li>
           </ul>
         </div>
       </div>

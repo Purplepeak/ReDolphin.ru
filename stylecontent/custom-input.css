@@ -1,0 +1,81 @@
+.file-wrapper {
+	cursor: pointer;
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+	float: left;
+	left: 50px;
+}
+
+.rd-file {
+	cursor: pointer;
+	font-size: 100px;
+	height: 100%;
+	filter: alpha(opacity = 1);
+	-moz-opacity: 0.01;
+	opacity: 0.01;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.file-button, .rd-submit, .rd-button {
+	background: #79130e;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor: pointer;
+	display: inline-block;
+	margin-right: 5px;
+	width: 200px;
+	height: 40px;
+	border: 1px solid transparent;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9
+		), color-stop(1, #e9e9e9));
+	background: -moz-linear-gradient(center top, #f9f9f9 5%, #e9e9e9 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9',
+		endColorstr='#e9e9e9');
+	background-color: #f9f9f9;
+	-webkit-border-top-left-radius: 20px;
+	-moz-border-radius-topleft: 20px;
+	border-top-left-radius: 20px;
+	-webkit-border-top-right-radius: 20px;
+	-moz-border-radius-topright: 20px;
+	border-top-right-radius: 20px;
+	-webkit-border-bottom-right-radius: 20px;
+	-moz-border-radius-bottomright: 20px;
+	border-bottom-right-radius: 20px;
+	-webkit-border-bottom-left-radius: 20px;
+	-moz-border-radius-bottomleft: 20px;
+	border-bottom-left-radius: 20px;
+	text-indent: 0;
+	border: 1px solid #dcdcdc;
+	color: #14181f;
+	font-family: Georgia, Arial, Helvetica, Geneva, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+	font-style: normal;
+	line-height: 40px;
+	text-decoration: none;
+}
+
+.file-button:hover {
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
+	background: -moz-linear-gradient(center top, #e9e9e9 5%, #f9f9f9 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9',endColorstr='#f9f9f9');
+	background-color: #e9e9e9;
+}
+
+.rd-submit {
+	padding: 0 56px;
+	float:right;
+	width: auto;
+	margin-right: 50px;
+}
+
+.rd-submit:hover {
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
+	background: -moz-linear-gradient(center top, #e9e9e9 5%, #f9f9f9 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9',endColorstr='#f9f9f9');
+	background-color: #e9e9e9;
+}
