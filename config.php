@@ -14,6 +14,6 @@ $thumbSettings = array(
     );
 
 $maxFileSize = 60;
-$uploadPath = 'uploads'; // Имя папки для хранения загруженных файлов
-$host = 'windows'; // Система на которой расположен сайт
+$uploadPath = 'uploads'; // РџР°РїРєР° РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… С„Р°Р№Р»РѕРІ.
+$host = 'windows'; // windows РёР»Рё linux
 ?>
