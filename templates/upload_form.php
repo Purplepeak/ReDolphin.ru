@@ -8,6 +8,7 @@
             <div class="file-button">Обзор</div>
             <input type="file" name="userfile" class="rd-file" />
           </div>
+          <span class="file-holder"></span>
           <input type="submit" value="Отправить" class="rd-submit">
       </form>
     </div>

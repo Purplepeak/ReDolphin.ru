@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 
-<!--[if lt IE 8]><html class="ie"><![endif]-->
+<!--[if IE 7]><html class="ie"><![endif]-->
 
 <html lang="en">
   <head>
     <meta charset="utf-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>ReDolphin - ЗАЛИВАЙ</title>
     <link rel="shortcut icon" href="<?= BASE_URL ?>/stylecontent/icon.png">
     <link href="<?= BASE_URL ?>/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/stylecontent/custom-input.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/stylecontent/home.css" rel="stylesheet">
     <script src = "<?= BASE_URL ?>/js/checkFileSize.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="<?= BASE_URL ?>/js/jquery.min.js"></script>
     <script src="<?= BASE_URL ?>/js/js-custom-input-file.js"></script>
     <script src="<?= BASE_URL ?>/bootstrap/js/bootstrap.min.js"></script>
     
