@@ -30,35 +30,6 @@ html,body {
 	overflow: hidden;
 }
 
-/*NAVBAR**********************/
-
-.navbar {
-	background-color: #28477d;
-	border-color: transparent;
-}
-
-.navbar .nav > li > a {
-	color:#ffffff;
-}
-
-.navbar .nav > li > a:hover {
-	font: bold 1.6em Georgia;
-	font-weight:bold;
-	font-size:16px;
-	font-style:normal;
-	color:#9e959e;
-}
-
-.navbar-inverse .navbar-brand {
-	font: bold 1.6em Georgia, Arial, Helvetica, Geneva, sans-serif;
-	color:#ffffff;
-}
-
-.navbar-inverse {
-	color: #ffffff;
-	background-color: #28477d;
-}
-
 .rd-tab:hover {
 	background-color: #0a47b0;
 }
@@ -100,13 +71,6 @@ html,body {
 	margin-left: 2px;
 }
 
-a.rd-button:hover {
-	color:#ffffff;
-	background-color: #193057;
-	text-decoration: none;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #193057), color-stop(1, #193057) );
-	background:-moz-linear-gradient( center top, #193057 5%, #193057 100% );
-}
 
 a.download-string {
 	text-decoration: none;
@@ -115,13 +79,8 @@ a.download-string {
 .rd-button {
 	margin-top: 7px;
 	display: block;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #28477d), color-stop(1, #28477d) );
-	background:-moz-linear-gradient( center top, #28477d 5%, #28477d 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#28477d', endColorstr='#28477d');
-	background-color:#28477d;
 	height: 50px;
 	width: 150px;
-	color:#edf2fa;
 	text-align: center;
 	font: bold 1.2em/48px Georgia, Arial, Helvetica, Geneva, sans-serif;
 }
