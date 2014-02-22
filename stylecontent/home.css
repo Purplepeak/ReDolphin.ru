@@ -34,14 +34,12 @@ html,body {
 	background-color: #0a47b0;
 }
 
-/*MAIN PAGE**********************/
 
 .rd-warning {
 	font-size: 13px;
 	text-align: center;
 	color: #666;
 }
-
 
 /*Выравниваем формы на случай браузера моложе IE8*/
 
@@ -57,6 +55,25 @@ html,body {
 
 .ie .rd-submit {
 	width:200px;
+}
+
+/*NAVBAR FOR IE**********************/
+
+.navIE .rd-nav-fix {
+	border-radius: 0;
+}
+
+.navIE .rd-nav-header {
+	float:left;
+}
+
+.navIE .rd-navbar-nav {
+	float:left;
+	margin:0;
+}
+
+.navIE .rd-navbar-nav > li {
+    float: left;
 }
 
 /*FILE INFO**********************/

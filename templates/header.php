@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <!--[if IE 7]><html class="ie"><![endif]-->
-
+<!--[if lt IE 9]><html class="navIE"><![endif]-->
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -18,17 +18,12 @@
     
   </head>
   <body>
-    <div class="navbar navbar-default navbar-fixed-top">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target=".navbar-responsive-collapse">
-				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
+    <div class="navbar navbar-default navbar-fixed-top rd-nav-fix">
+		<div class="navbar-header rd-nav-header">
 			<a class="navbar-brand" href="<?= BASE_URL ?>/">ReDolphin</a>
 		</div>
-		<div class="navbar-collapse collapse navbar-responsive-collapse">
-			<ul class="nav navbar-nav">
+		<div>
+			<ul class="nav navbar-nav rd-navbar-nav">
 				<li><a href="<?= BASE_URL ?>/">Главная</a></li>
 				<li><a href="#">Файлы</a></li>
 			</ul>
