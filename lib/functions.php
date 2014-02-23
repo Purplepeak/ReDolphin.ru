@@ -1,90 +1,90 @@
-<?php 
+<?php
 function spChars($variable) {
-	return htmlspecialchars($variable, ENT_QUOTES);
+	return htmlspecialchars ( $variable, ENT_QUOTES );
 }
-
-function encodeThis($text, $server) {
-	switch ($server) {
-		case 'windows':
-			return iconv("utf-8", "windows-1251//IGNORE", $text);
-	        break;
-		case 'linux':
+function encodeThis($text, $host) {
+	switch ($host) {
+		case 'windows' :
+			return iconv ( "utf-8", "windows-1251//IGNORE", $text );
+			break;
+		case 'linux' :
 			return $text;
 			break;
-		default:
-			throw new Exception("Переменная host в файле config.php указана неверно.");  
-    }
+		default :
+			throw new Exception ( "Переменная host в файле config.php указана неверно." );
+			break;
+	}
 }
 function useTranslit($name) {
-	$translit = array(
-			'а'	=>	'a',
+	$translit = array (
+			'а' => 'a',
 			'А' => 'A',
-			'б'	=>	'b',
+			'б' => 'b',
 			'Б' => 'B',
-			'в'	=>	'v',
+			'в' => 'v',
 			'В' => 'V',
-			'г'	=>	'g',
+			'г' => 'g',
 			'Г' => 'G',
-			'д'	=>	'd',
+			'д' => 'd',
 			'Д' => 'D',
-			'е'	=>	'e',
+			'е' => 'e',
 			'Е' => 'E',
-			'ё'	=>	'yo',
+			'ё' => 'yo',
 			'Ё' => 'Jo',
-			'ж'	=>	'zh',
+			'ж' => 'zh',
 			'Ж' => 'Zh',
-			'з'	=>	'z',
+			'з' => 'z',
 			'З' => 'Z',
-			'и'	=>	'i',
+			'и' => 'i',
 			'И' => 'I',
-			'й'	=>	'j',
+			'й' => 'j',
 			'Й' => 'J',
-			'к'	=>	'k',
+			'к' => 'k',
 			'К' => 'K',
-			'л'	=>	'l',
+			'л' => 'l',
 			'Л' => 'L',
-			'м'	=>	'm',
+			'м' => 'm',
 			'М' => 'M',
-			'н'	=>	'n',
+			'н' => 'n',
 			'Н' => 'N',
-			'о'	=>	'o',
+			'о' => 'o',
 			'О' => 'O',
-			'п'	=>	'p',
+			'п' => 'p',
 			'П' => 'P',
-			'р'	=>	'r',
+			'р' => 'r',
 			'Р' => 'R',
-			'с'	=>	's',
+			'с' => 's',
 			'С' => 'S',
-			'т'	=>	't',
+			'т' => 't',
 			'Т' => 'T',
-			'у'	=>	'u',
+			'у' => 'u',
 			'У' => 'U',
-			'ф'	=>	'f',
+			'ф' => 'f',
 			'Ф' => 'F',
 			'х' => 'h',
 			'Х' => 'H',
-			'ц'	=>	'c',
+			'ц' => 'c',
 			'Ц' => 'C',
-			'ч'	=>	'ch',
+			'ч' => 'ch',
 			'Ч' => 'Ch',
-			'ш'	=>	'sh',
+			'ш' => 'sh',
 			'Ш' => 'Sh',
-			'щ'	=>	'shh',
+			'щ' => 'shh',
 			'Щ' => 'Shh',
-			'ъ'	=>	'',
+			'ъ' => '',
 			'Ъ' => '',
-			'ы'	=>	'y',
+			'ы' => 'y',
 			'Ы' => 'Y',
-			'ь'	=>	"'",
-			 'Ь' => "''",
-			'э'	=>	'je',
+			'ь' => "'",
+			'Ь' => "''",
+			'э' => 'je',
 			'Э' => 'Je',
-			'ю'	=>	'yu',
+			'ю' => 'yu',
 			'Ю' => 'Ju',
-			'я'	=>	'ya',
-			'Я' => 'Ja'
+			'я' => 'ya',
+			'Я' => 'Ja' 
 	);
 	
-	return strtr($name, $translit);
+	return strtr ( $name, $translit );
 }
 ?>
