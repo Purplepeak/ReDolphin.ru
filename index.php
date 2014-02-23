@@ -34,8 +34,8 @@ $app->add(new \Slim\Middleware\SessionCookie(array(
     'domain' => null,
     'secure' => false,
     'httponly' => true,
-    'name' => 'slim_session',
-    'secret' => 'CHANGE_ME',
+    'name' => 'rd_session',
+    'secret' => 'hjhfyr289NiOj',
     'cipher' => MCRYPT_RIJNDAEL_256,
     'cipher_mode' => MCRYPT_MODE_CBC
 )));
@@ -88,8 +88,9 @@ $app->post('/upload', function() use ($app)
     $thumbWidth    = $thumbSettings['thumbWidth'];
     $thumbHeight   = $thumbSettings['thumbHeight'];
     $thumbMode     = $thumbSettings['thumbMode'];
+    $type = getimagesize(encodeThis($file->link, $app->config('host')));
     
-    if (getimagesize(encodeThis($file->link, $app->config('host')))) {
+    if ($type == true and ($type['mime'] != 'image/tiff' and $type['mime'] != 'image/x-ms-bmp')) {
     	$thumbnail = new Thumbnail("{$app->config('uploadPath')}/{$file->id}");
     
     	/**
@@ -102,7 +103,7 @@ $app->post('/upload', function() use ($app)
     				"{$thumbWidth}x{$thumbHeight}"
     		));
     		$thumbLink = BASE_URL . '/' . $thumbnail->link($file->link, $thumbWidth, $thumbHeight, $thumbMode);
-    		$file->addData('thumb_link', $thumbLink, $file->id);
+    		$file->save('thumb_link', $thumbLink);
     	} catch (ThumbnailException $e) {
     		error_log($e->getMessage());
     	}
@@ -149,8 +150,6 @@ $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($
             'error' => "Ошибка сервера"
         );
         $app->render('server_error.php', $errorData, 500);
-        $e->getMessage();
-        $e->getTraceAsString();
         break;
     }
 });

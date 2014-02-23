@@ -13,17 +13,17 @@ SITE.fileInputs = function() {
     if($fakeFile.length === 0) {
       $('.file-holder').text(newVal);
     } else {
-      $fakeFile.text(truncate(newVal));
+      $fakeFile.text(truncate(newVal, 30));
     }
   }
 };
  
 $(document).ready(function() {
   $('.file-wrapper input[type=file]').bind('change', SITE.fileInputs);
+  $('.download-string').text(truncate(name, 40));
 });
 
-function truncate(fullStr) {
-	var strLen = 30;
+function truncate(fullStr, strLen) {
 	var separator = '...';
 	
     if (fullStr.length <= strLen) return fullStr;

@@ -9,7 +9,7 @@
       <form name = "upload_form" class="upload_form"  enctype="multipart/form-data" action="<?= BASE_URL ?>/upload"  method="POST" onsubmit="return showFileSize(<?= intval($maxFileSize)?>, this)" >
           <input type="hidden" name="MAX_FILE_SIZE" value="<?= $maxFileSize * pow(10, 6) ?>" >
           <div class="file-wrapper">
-            <div class="file-button">Обзор</div>
+            <div class="file-button">Выберите файл</div>
             <input type="file" name="userfile" class="rd-file" />
           </div>
           <span class="file-holder"></span>

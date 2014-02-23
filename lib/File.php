@@ -55,12 +55,11 @@ class File {
 		$this->thumbLink = $row['thumb_link'];
 	}
 	
-	public function addData($dbRow, $value = null, $id) {
+	public function save($dbRow, $value = null) {
 		
 		$sth = $this->database->prepare("UPDATE {$this->table} SET {$dbRow} = :value WHERE file_id = :id");
-		$sth2 = $this->database->prepare("SELECT {$dbRow} FROM {$this->table} WHERE file_id = :id");
 		
-		$sth->bindParam(':id', $id);
+		$sth->bindParam(':id', $this->id);
 		$sth->bindParam(':value', $value);
 		
 		$sth->execute();

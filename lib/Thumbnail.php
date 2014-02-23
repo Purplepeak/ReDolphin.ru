@@ -38,16 +38,19 @@ class Thumbnail
     public function link($image, $thumbWidth, $thumbHeight, $mode)
     {
         $link = $this->thumbPath . "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$image}";
+        
         if (($mode != self::MODE_SCALE) && ($mode != self::MODE_CROP)) {
-            throw new ThumbnailException("Указанный режим сжатия '{$mode}' не поддерживается.");
-        } elseif ($this->allowedSizes) {
-            if ($this->isAllowedSize($thumbWidth, $thumbHeight) === true) {
-                return $link;
-            } else {
-                throw new ThumbnailException("Preview size '{$thumbWidth}x{$thumbHeight}' not allowed.");
-            }
-        } else {
+            throw new ThumbnailException("Mode '{$mode}' is not available");
+        }
+        
+        if (!$this->allowedSizes) {
             return $link;
+        }
+        
+        if ($this->isAllowedSize($thumbWidth, $thumbHeight)) {
+        	return $link;
+        } else {
+        	throw new ThumbnailException("Preview size '{$thumbWidth}x{$thumbHeight}' is not allowed");
         }
     }
     
@@ -57,9 +60,30 @@ class Thumbnail
     
     private function saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $imageName)
     {
-        imagepng($thumb, $this->thumbPath . "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
-        header('Content-Type: image/gif');
-        readfile($this->thumbPath . "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}");
+    	$thumbImagePath = $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}";
+    	
+        switch($type) {
+ 	        case "image/jpeg":
+ 				self::errorHeader("200");
+ 				imagejpeg($thumb, $thumbImagePath);
+ 				header('Content-Type: image/jpeg');
+ 				break;
+ 			case "image/png":
+ 				self::errorHeader("200");
+ 				imagepng($thumb, $thumbImagePath);
+ 				header('Content-Type: image/png');
+ 				break;
+ 			case "image/gif":
+ 				self::errorHeader("200");
+ 				imagegif($thumb, $thumbImagePath);
+ 				header('Content-Type: image/gif');
+ 				break;
+ 			default:
+ 				throw new ThumbnailException("Invalid image type: $type");
+ 				break;
+ 		}
+ 		
+ 		readfile($thumbImagePath);
     }
     
     public function getResizedImage($image, $thumbWidth, $thumbHeight, $mode)
@@ -97,7 +121,7 @@ class Thumbnail
                 break;
             default:
                 self::errorHeader("500");
-                throw new ThumbnailException("Формат {$type} выбранного изображения не поддерживается.");
+                throw new ThumbnailException("Invalid image type: $type");
         }
         
         $sourceRatio = $sourceWidth / $sourceHeight;

@@ -48,7 +48,7 @@ class Upload {
 	        
 			$newDir = $this->makeDir($file->id) . $newName['safe'];
 			$file->link = $newDir;
-			$file->addData('link', $file->link, $file->id);
+			$file->save('link', $file->link);
 			
 			if (!move_uploaded_file($_FILES['userfile']['tmp_name'], encodeThis($newDir, $this->host))) {
 				throw new UploadException('Не удалось переместить загруженный файл');

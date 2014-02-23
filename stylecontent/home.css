@@ -27,7 +27,6 @@ html,body {
 
 .upload_form {
 	text-align: center;
-	overflow: hidden;
 }
 
 .rd-tab:hover {
@@ -43,37 +42,68 @@ html,body {
 
 /*Выравниваем формы на случай браузера моложе IE8*/
 
-.ie .table {
+.ie-7 .table {
 	display block; 
 	padding-top: 360px; 
 	height: auto;
 }
 
-.ie .file-wrapper {
+.ie-7 .file-wrapper {
 	width:205px;
 }
 
-.ie .rd-submit {
+.ie-7 .rd-submit {
 	width:200px;
 }
 
 /*NAVBAR FOR IE**********************/
 
-.navIE .rd-nav-fix {
+.ie-8 .rd-nav-fix {
 	border-radius: 0;
 }
 
-.navIE .rd-nav-header {
+.ie-8 .rd-nav-header {
 	float:left;
 }
 
-.navIE .rd-navbar-nav {
+.ie-8 .rd-navbar-nav {
 	float:left;
 	margin:0;
 }
 
-.navIE .rd-navbar-nav > li {
+.ie-8 .rd-navbar-nav > li {
     float: left;
+}
+
+.ie-7 .rd-nav-header {
+    vertical-align: middle;
+	display: inline;
+	zoom: 1;
+	float: none;
+}
+
+.ie-7 .rd-navbar-nav {
+	vertical-align: middle;
+	display: inline;
+	zoom: 1;
+	float: none;
+}
+
+.ie-7  .rd-navbar-nav > li {
+	vertical-align: middle;
+	float: none;
+	display: inline;
+	zoom: 1;
+}
+
+.ie-7 .rd-navbar-nav > li a {
+	vertical-align: middle;
+	display: inline;
+	zoom: 1;
+}
+
+.ie-7  .rd-nav-brand {
+	height: auto;
 }
 
 /*FILE INFO**********************/
