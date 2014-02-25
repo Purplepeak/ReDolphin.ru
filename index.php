@@ -154,5 +154,14 @@ $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($
     }
 });
 
+$app->get('/files', function() use ($app)
+{
+	    $fileInfo = new File($app->db);
+	    $files = $fileInfo->getFilesInfo();
+        $app->render('files_sheet.php', array(
+    		'files' => $files
+        ));
+});
+
 $app->run();
 ?>

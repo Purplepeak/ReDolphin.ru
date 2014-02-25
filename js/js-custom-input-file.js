@@ -20,7 +20,6 @@ SITE.fileInputs = function() {
  
 $(document).ready(function() {
   $('.file-wrapper input[type=file]').bind('change', SITE.fileInputs);
-  $('.download-string').text(truncate(name, 40));
 });
 
 function truncate(fullStr, strLen) {

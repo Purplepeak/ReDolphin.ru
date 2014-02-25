@@ -45,7 +45,6 @@ class File {
 		$sth->execute();
 		$sth->setFetchMode(PDO::FETCH_ASSOC);
 		$row = $sth->fetch();
-	
 		$this->name = $row['file_name'];
 		$this->uniqName = $row['uniq_name'];
 		$this->type = $row['file_type'];
@@ -71,6 +70,25 @@ class File {
 		} else {
 			return true;
 		}
+	}
+	
+	public function getFilesInfo() {
+		$sth = $this->database->prepare("SELECT * FROM {$this->table}");
+		
+		$sth->execute();
+		$count = $sth->rowCount();
+		$files = array();
+		for ($i = $count; $i >= 1; $i--) {
+			$this->findById($i);
+			$fileArray = array($i, $this->name, $this->size);
+			array_push($files, $fileArray);
+		}
+		
+		if ($count > 100) {
+			$files = array_slice($files, 0, 100);
+		}
+		
+		return $files;
 	}
 }
 ?>

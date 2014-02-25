@@ -38,6 +38,8 @@ class Upload {
 			
 			$newName = $this->getSafeName($_FILES['userfile']['name'], $_FILES['userfile']['tmp_name']);
 			
+			$file->database->beginTransaction();
+			
 			$file->name = $newName['pretty'];
 			$file->uniqName = $newName['safe'];
 			$file->size = $_FILES['userfile']['size'];
@@ -49,6 +51,8 @@ class Upload {
 			$newDir = $this->makeDir($file->id) . $newName['safe'];
 			$file->link = $newDir;
 			$file->save('link', $file->link);
+			
+			$file->database->commit();
 			
 			if (!move_uploaded_file($_FILES['userfile']['tmp_name'], encodeThis($newDir, $this->host))) {
 				throw new UploadException('Не удалось переместить загруженный файл');

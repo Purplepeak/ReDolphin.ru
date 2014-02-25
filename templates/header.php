@@ -11,10 +11,14 @@
     <link href="<?= BASE_URL ?>/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/stylecontent/custom-input.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/stylecontent/home.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/stylecontent/modal/the-modal.css" rel="stylesheet" media="all">
+	<link href="<?= BASE_URL ?>/stylecontent/modal/modals.css" rel="stylesheet" media="all">
     
     <script src="<?= BASE_URL ?>/js/jquery.min.js"></script>
     <script src="<?= BASE_URL ?>/js/js-custom-input-file.js"></script>
     <script src="<?= BASE_URL ?>/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<?= BASE_URL ?>/js/jquery.actual.js"></script>
+    <script src="<?= BASE_URL ?>/stylecontent/modal/jquery-modal-lib.js"></script>
     
   </head>
   <body>
@@ -24,6 +28,6 @@
 		</div>
 			<ul class="nav navbar-nav rd-navbar-nav">
 				<li><a href="<?= BASE_URL ?>/">Главная</a></li>
-				<li><a href="#">Файлы</a></li>
+				<li><a href="<?= BASE_URL ?>/files">Файлы</a></li>
 			</ul>
 	</div>
