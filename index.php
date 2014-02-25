@@ -20,7 +20,7 @@ $app = new \Slim\Slim(array(
     'thumbSettings' => $thumbSettings,
     'maxFileSize' => $maxFileSize,
     'uploadPath' => $uploadPath,
-	'host' => $host
+    'host' => $host
 ));
 
 $app->notFound(function() use ($app)
@@ -88,27 +88,28 @@ $app->post('/upload', function() use ($app)
     $thumbWidth    = $thumbSettings['thumbWidth'];
     $thumbHeight   = $thumbSettings['thumbHeight'];
     $thumbMode     = $thumbSettings['thumbMode'];
-    $type = getimagesize(encodeThis($file->link, $app->config('host')));
+    $type          = getimagesize(encodeThis($file->link, $app->config('host')));
     
     if ($type == true and ($type['mime'] != 'image/tiff' and $type['mime'] != 'image/x-ms-bmp')) {
-    	$thumbnail = new Thumbnail("{$app->config('uploadPath')}/{$file->id}");
-    
-    	/**
-    	 * Если, по каким-либо причинам, создать ссылку не удается, пользователю
-    	 * отсылается информация о файле без превью.
-    	*/
-    
-    	try {
-    		$thumbnail->setAllowedSizes(array(
-    				"{$thumbWidth}x{$thumbHeight}"
-    		));
-    		$thumbLink = BASE_URL . '/' . $thumbnail->link($file->link, $thumbWidth, $thumbHeight, $thumbMode);
-    		$file->save('thumb_link', $thumbLink);
-    	} catch (ThumbnailException $e) {
-    		error_log($e->getMessage());
-    	}
-    	
-    } 
+        $thumbnail = new Thumbnail("{$app->config('uploadPath')}/{$file->id}");
+        
+        /**
+         * Если, по каким-либо причинам, создать ссылку не удается, пользователю
+         * отсылается информация о файле без превью.
+         */
+        
+        try {
+            $thumbnail->setAllowedSizes(array(
+                "{$thumbWidth}x{$thumbHeight}"
+            ));
+            $thumbLink = BASE_URL . '/' . $thumbnail->link($file->link, $thumbWidth, $thumbHeight, $thumbMode);
+            $file->save('thumb_link', $thumbLink);
+        }
+        catch (ThumbnailException $e) {
+            error_log($e->getMessage());
+        }
+        
+    }
     
     $app->redirect(BASE_URL . "/files/{$file->id}");
 });
@@ -122,7 +123,7 @@ $app->get('/files/:id', function($id) use ($app)
     }
     
     $app->render('file_info.php', array(
-    		'fileData' => $fileData
+        'fileData' => $fileData
     ));
 });
 
@@ -140,7 +141,7 @@ $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($
         
         $thumbWidth  = $thumbRes[1];
         $thumbHeight = $thumbRes[2];
-       
+        
         $resizer = new Thumbnail("{$thumbPath}");
         // $resizer->setAllowedSizes(array("{$thumbWidth}x{$thumbHeight}"));
         $resizer->getResizedImage(encodeThis($imagePath, $app->config('host')), $thumbWidth, $thumbHeight, $mode);
@@ -156,11 +157,11 @@ $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($
 
 $app->get('/files', function() use ($app)
 {
-	    $fileInfo = new File($app->db);
-	    $files = $fileInfo->getFilesInfo();
-        $app->render('files_sheet.php', array(
-    		'files' => $files
-        ));
+    $fileInfo = new File($app->db);
+    $files    = $fileInfo->getFilesInfo();
+    $app->render('files_sheet.php', array(
+        'files' => $files
+    ));
 });
 
 $app->run();
