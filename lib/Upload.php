@@ -35,7 +35,7 @@ class Upload
         }
         
         if (!($_FILES['userfile']['error'] === UPLOAD_ERR_OK)) {
-            throw new UploadException(null, $_FILES['userfile']['error']);
+            throw UploadException::fromErrorCode($_FILES['userfile']['error']);
         }
         
         if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {

@@ -10,15 +10,21 @@ jQuery(function($) {
 		e.preventDefault();
 		$.modal().close();
 	});
+	
+	var img = new Image();
+	$(img).attr('class', '' + "src-image");
+	$(img).attr('src', '' + srcImg);
 
 	$(".trigger").click(function() {
+		
+		$(img).appendTo('.modal');
 		var windowWidth = $('html').width();
 
-		var windowWidth = $('html').width();
-		var windowHeight = $('html').height();
+		var windowWidth = $(window).width();
+		var windowHeight = $(window).height();
 
-		var imageWidth = $('.src-image').actual('width');
-		var imageHeight = $('.src-image').actual('height');
+		var imageWidth = $('.src-image').prop('width');
+		var imageHeight = $('.src-image').prop('height');
 
 		var maxImageWidth = windowWidth - 300;
 		var maxImageHeight = windowHeight - 150;
@@ -27,11 +33,11 @@ jQuery(function($) {
 		var modalHeight = imageHeight + 87;
 
 		/*
-		 * $('.maxImageWidth').text("maxImageWidth: " + maxImageWidth);
-		 * $('.maxImageHeight').text("maxImageHeight: " + maxImageHeight);
-		 * $('.modalWidth').text("modalWidth: " + modalWidth);
-		 * $('.modalHeight').text("modalHeight: " + modalHeight);
-		 */
+		  $('.maxImageWidth').text("maxImageWidth: " + maxImageWidth);
+		  $('.maxImageHeight').text("maxImageHeight: " + maxImageHeight);
+		  $('.modalWidth').text("modalWidth: " + modalWidth);
+		  $('.modalHeight').text("modalHeight: " + modalHeight);
+		*/
 
 		if (modalWidth > maxImageWidth) {
 			$(".modal").css('width', maxImageWidth + "px");

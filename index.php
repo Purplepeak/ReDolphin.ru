@@ -11,12 +11,14 @@ require 'lib/Thumbnail.php';
 require 'lib/UploadException.php';
 require "lib/ThumbnailException.php";
 require 'lib/Helper.php';
+require 'lib/Searcher.php';
 require 'lib/functions.php';
 
 \Slim\Slim::registerAutoloader();
 
 $app = new \Slim\Slim(array(
     'dbInfo' => $dbInfo,
+	'dbSphinx' => $dbSphinx,	
     'thumbSettings' => $thumbSettings,
     'maxFileSize' => $maxFileSize,
     'uploadPath' => $uploadPath,
@@ -56,6 +58,19 @@ $app->container->singleton('db', function() use ($app)
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     return $db;
+});
+
+$app->container->singleton('dbSphinx', function() use ($app) 
+{
+	$connetcionArray = $app->config('dbSphinx');
+	$driver          = $connetcionArray['driver'];
+	$host            = $connetcionArray['host'];
+	$port            = $connetcionArray['port'];
+	$db              = new PDO($driver . ':host=' . $host . ';port=' . $port);
+	
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	return $db;
 });
 
 $app->get('/', function() use ($app)
@@ -110,20 +125,24 @@ $app->post('/upload', function() use ($app)
         }
         
     }
+    $searcher = new Searcher($app->dbSphinx);
+    $searcher->updateRtIndex($file);
     
     $app->redirect(BASE_URL . "/files/{$file->id}");
 });
 
 $app->get('/files/:id', function($id) use ($app)
 {
-    $fileData = new File($app->db);
-    $fileData->findById($id);
-    if ($fileData->name == null) {
-        $app->notFound();
+    $fileData = new File($app->db, $app->config('host'));
+    try {
+    	$fileData->findById($id);
     }
-    
+    catch (Exception $e) {
+    	$app->notFound();
+    }
     $app->render('file_info.php', array(
-        'fileData' => $fileData
+        'fileData' => $fileData,
+    	'id' => $id
     ));
 });
 
@@ -159,9 +178,33 @@ $app->get('/files', function() use ($app)
 {
     $fileInfo = new File($app->db);
     $files    = $fileInfo->getFilesInfo();
+    
     $app->render('files_sheet.php', array(
         'files' => $files
+    )); 
+});
+
+$app->get('/search', function() use ($app)
+{
+	$searchQuery = $_GET['s'];
+	$results = new Searcher($app->dbSphinx);
+	$results = $results->getSearchResults($searchQuery);
+	
+	$app->render('search_page.php', array(
+        'results' => $results
     ));
+});
+
+$app->post('/delete/:id/:name', function($id, $name) use ($app)
+{
+	$delete = new File($app->db);
+	$deleteFromSearcher = new Searcher($app->dbSphinx);
+	$delete->deleteFile($id);
+	$deleteFromSearcher->delete($id);
+	
+	$app->render('deleted.php', array(
+			'name' => $name
+	));
 });
 
 $app->run();

@@ -7,6 +7,12 @@ $dbInfo = array(
 	'dbPass' => '901117'
 	);
 
+$dbSphinx = array(
+	'driver' => 'mysql',
+	'host' => '127.0.0.1',
+	'port' => '9306'
+    );
+
 $thumbSettings = array(
 	'thumbWidth' => 250,
 	'thumbHeight' => 250,

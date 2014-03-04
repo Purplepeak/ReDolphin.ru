@@ -23,7 +23,7 @@ $(document).ready(function() {
 });
 
 function truncate(fullStr, strLen) {
-	var separator = '...';
+	var separator = '…';
 	
     if (fullStr.length <= strLen) return fullStr;
     

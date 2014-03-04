@@ -12,10 +12,12 @@ class File
     public $size;
     public $link;
     public $thumbLink;
+    private $host;
     
-    public function __construct($database)
+    public function __construct($database, $host = null)
     {
         $this->database = $database;
+        $this->host = $host;
     }
     
     public function saveData()
@@ -30,7 +32,7 @@ class File
             'link' => ''
         );
         $sth  = $this->database->prepare("
-				                        INSERT INTO files (file_id, file_name, uniq_name, file_type, create_date, file_size, link) 
+				                        INSERT INTO {$this->table} (file_id, file_name, uniq_name, file_type, create_date, file_size, link) 
 				                        VALUE (:id, :name, :uniqName, :type, :date, :size, :link)");
         $sth->execute($data);
         $id       = $this->database->lastInsertId();
@@ -47,10 +49,13 @@ class File
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
         $row             = $sth->fetch();
+        if (!$row) {
+        	throw new Exception("File with id: {$id} not found");
+        }
         $this->name      = $row['file_name'];
         $this->uniqName  = $row['uniq_name'];
         $this->type      = $row['file_type'];
-        $this->date      = strval($row['create_date']);
+        $this->date      = $row['create_date'];
         $this->size      = $row['file_size'];
         $this->link      = $row['link'];
         $this->thumbLink = $row['thumb_link'];
@@ -78,26 +83,51 @@ class File
     
     public function getFilesInfo()
     {
-        $sth = $this->database->prepare("SELECT * FROM {$this->table}");
+        $sth1 = $this->database->prepare("SELECT COUNT(*) FROM {$this->table}");
         
-        $sth->execute();
-        $count = $sth->rowCount();
+        $sth1->execute();
+        $sth1->setFetchMode(PDO::FETCH_NUM);
+        $count = $sth1->fetch();
         $files = array();
-        for ($i = $count; $i >= 1; $i--) {
-            $this->findById($i);
-            $fileArray = array(
-                $i,
-                $this->name,
-                $this->size
-            );
-            array_push($files, $fileArray);
-        }
+        
+        $sth2 = $this->database->prepare("SELECT * FROM {$this->table}");
+        $sth2->setFetchMode(PDO::FETCH_ASSOC);
+        $sth2->execute();
+        $results = $sth2->fetchAll();
+        
+        $results = array_reverse($results);
         
         if ($count > 100) {
-            $files = array_slice($files, 0, 100);
+        	$results = array_slice($results, 0, 100);
         }
         
-        return $files;
+        return $results;
+    }
+    
+    public function deleteFile($id)
+    {
+    	$sth = $this->database->prepare("DELETE FROM {$this->table} WHERE file_id= :id");
+    	$sth->bindParam(':id', $id);
+    	$sth->execute();
+    }
+    
+    public function isMediaFile()
+    {
+    	$finfo = new finfo(FILEINFO_MIME_TYPE);
+    	$mime = $finfo->file(encodeThis($this->link, $this->host));
+    	$allowedMedia = array (
+    			'audio/mpeg',
+    			'audio/mp4',
+    			'audio/ogg',
+    			'audio/wav',
+    			'audio/webm'
+    	);
+    	foreach ($allowedMedia as $value) {
+    		if ($mime == $value) {
+    			$fileExtension = pathinfo($this->link);
+    			return $fileExtension['extension'];
+    		}
+    	}
     }
 }
 ?>
