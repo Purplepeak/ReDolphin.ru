@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 $dbInfo = array(
 	'dbDriver' => 'mysql',
 	'dbHost' => '127.0.0.1',
@@ -21,5 +21,5 @@ $thumbSettings = array(
 
 $maxFileSize = 60;
 $uploadPath = 'uploads'; // Папка для сохранения пользовательских файлов.
-$host = 'windows'; // windows или linux
+$host = 'linux'; // windows или linux
 ?>
