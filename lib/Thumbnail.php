@@ -95,14 +95,14 @@ class Thumbnail
         }
         if (!is_readable($image)) {
             self::errorHeader("404");
-            throw new ThumbnailException("Файл {$image} отсутствует или недоступен для чтения.");
+            throw new ThumbnailException("File {$image} not found");
         }
         
         $size = getimagesize($image);
         
         if (!$size) {
             self::errorHeader("500");
-            throw new ThumbnailException("Ошибка чтения фалйа {$image}. Убедитесь, что ваш файл является картинкой.");
+            throw new ThumbnailException("Read error {$image}");
         }
         
         $type = $size['mime'];
@@ -171,8 +171,8 @@ class Thumbnail
         foreach ($allowedSizes as $value) {
             $sizeReg = '{(\\d+)x(\\d+)}';
             if (!preg_match($sizeReg, $value, $regArray)) {
-                throw new ThumbnailException("Неверный формат передаваемых методу setAllowedSizes() размеров превью. 
-                                             Аргумент должен быть массивом: array('100x100', '230x250' и т.д).");
+                throw new ThumbnailException("Invalid format passed to the method setAllowedSizes(). 
+                                             The argument should be an array: array('100x100', '230x250' etc)");
             }
             array_shift($regArray);
             $sizes = array_map('intval', $regArray);

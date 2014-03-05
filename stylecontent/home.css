@@ -1,6 +1,4 @@
-
 /*Центрируем элемент по вертикали и горизонтали*/
-
 html,body {
 	height: 100%;
 }
@@ -18,7 +16,7 @@ html,body {
 .rd-upload {
 	max-width: 50em;
 	margin: 0 auto;
-	height:auto;
+	height: auto;
 }
 
 .rd-alert {
@@ -33,7 +31,6 @@ html,body {
 	background-color: #0a47b0;
 }
 
-
 .rd-warning {
 	font-size: 13px;
 	text-align: center;
@@ -41,42 +38,39 @@ html,body {
 }
 
 /*Выравниваем формы на случай браузера моложе IE8*/
-
-.ie-7 .table {
-	display block; 
-	padding-top: 360px; 
+.ie-7 .table {display block;
+	padding-top: 360px;
 	height: auto;
 }
 
 .ie-7 .file-wrapper {
-	width:205px;
+	width: 205px;
 }
 
 .ie-7 .rd-submit {
-	width:200px;
+	width: 200px;
 }
 
 /*NAVBAR FOR IE**********************/
-
 .ie-8 .rd-nav-fix {
 	border-radius: 0;
 }
 
 .ie-8 .rd-nav-header {
-	float:left;
+	float: left;
 }
 
 .ie-8 .rd-navbar-nav {
-	float:left;
-	margin:0;
+	float: left;
+	margin: 0;
 }
 
-.ie-8 .rd-navbar-nav > li {
-    float: left;
+.ie-8 .rd-navbar-nav>li {
+	float: left;
 }
 
 .ie-7 .rd-nav-header {
-    vertical-align: middle;
+	vertical-align: middle;
 	display: inline;
 	zoom: 1;
 	float: none;
@@ -89,14 +83,14 @@ html,body {
 	float: none;
 }
 
-.ie-7  .rd-navbar-nav > li {
+.ie-7  .rd-navbar-nav>li {
 	vertical-align: middle;
 	float: none;
 	display: inline;
 	zoom: 1;
 }
 
-.ie-7 .rd-navbar-nav > li a {
+.ie-7 .rd-navbar-nav>li a {
 	vertical-align: middle;
 	display: inline;
 	zoom: 1;
@@ -107,8 +101,7 @@ html,body {
 }
 
 /*FILE INFO**********************/
-
-.rd-download, .rd-files-sheet, .rd-search {
+.rd-download,.rd-files-sheet,.rd-search {
 	margin-top: 75px;
 	margin-left: 7px;
 }
@@ -118,7 +111,6 @@ html,body {
 	margin-left: 2px;
 }
 
-
 a.download-string {
 	text-decoration: none;
 }
@@ -127,7 +119,7 @@ a.download-string:hover {
 	color: #2773e6;
 }
 
-.rd-button, .delete-btn {
+.rd-button,.delete-btn {
 	margin-top: 7px;
 	display: inline-block;
 	height: 30px;
@@ -137,31 +129,21 @@ a.download-string:hover {
 }
 
 .size-sheet {
-	font-size:11px;
+	font-size: 11px;
 }
 
-.search-button, .trigger, .file-button, .close {
+.search-button,.trigger,.file-button,.close,.jp-play {
 	background: transparent;
-    border: none;
-    outline-color: transparent;
+	border: none;
+	outline-color: transparent;
 }
 
 .trigger {
 	margin-left: -5px;
 }
 
-.search-form {
-	padding-top:6px;
-	width:270px;
-	float:right;
-}
-.search { 
-	padding:6px 15px 6px 30px;
-	margin:3px;
-}
-
-.rounded { 
-	border-radius:15px; 
+.rounded {
+	border-radius: 15px;
 	-webkit-border-top-left-radius: 20px;
 	-moz-border-radius-topleft: 20px;
 	border-top-left-radius: 20px;
@@ -173,22 +155,12 @@ a.download-string:hover {
 	border-bottom-right-radius: 20px;
 	-webkit-border-bottom-left-radius: 20px;
 	-moz-border-radius-bottomleft: 20px;
-	border-bottom-left-radius: 20px; 
+	border-bottom-left-radius: 20px;
 }
 
-input[type=search]{
-	color:#bcbcbc;
-	outline-color: transparent;
-}
-
-.search-form input[type=search]{
-	border:1px solid #d0d0d0;
-	background-color:#fcfcfc;
-}
-
-.file-name-sheet:hover, .search-results:hover {
-	text-decoration:none;
-	color:black;
+.file-name-sheet:hover,.search-results:hover {
+	text-decoration: none;
+	color: black;
 }
 
 .delete-btn {
@@ -196,5 +168,73 @@ input[type=search]{
 }
 
 .delete-form {
-	display:inline-block;
+	display: inline-block;
+}
+
+.ie-7 .delete-form {
+	display: inline;
+}
+
+/*SEARCH**********************/
+
+.searchform {
+	margin-top:5px;
+	margin-right: 5px;
+	float: right;
+	border: solid 1px #d2d2d2;
+	padding: 3px 5px;
+	-webkit-border-radius: 2em;
+	-moz-border-radius: 2em;
+	border-radius: 2em;
+	-webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, .1);
+	-moz-box-shadow: 0 1px 0px rgba(0, 0, 0, .1);
+	box-shadow: 0 1px 0px rgba(0, 0, 0, .1);
+	background: #f1f1f1;
+	background: -webkit-gradient(linear, left top, left bottom, from(#eeeeee),
+		to(#ededed));
+	background: -moz-linear-gradient(top, #fff, #ededed);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee',
+		endColorstr='#ededed');
+	-ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee',
+		endColorstr='#ededed');
+	zoom: 1;
+}
+
+.ie-7 .searchform {
+	vertical-align: middle;
+	display: inline;
+	zoom: 1;
+	float: none;
+    margin-left: 20px;
+}
+
+.searchfield {
+	background: #fff;
+	padding: 6px 6px 6px 8px;
+	width: 202px;
+	border: solid 1px #bcbbbb;
+	outline: none;
+	-webkit-border-radius: 2em;
+	-moz-border-radius: 2em;
+	border-radius: 2em;
+	-moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .2);
+	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .2);
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, .2);
+}
+
+.ie-7 .searchfield {
+	width: 152px;
+}
+
+.ie-7 .search-button {
+	padding-left:3px;
+}
+
+.searchform input {
+	font: normal 12px/100% Arial, Helvetica, sans-serif;
+}
+
+input[type=search] {
+	color: #bcbcbc;
+	outline-color: transparent;
 }

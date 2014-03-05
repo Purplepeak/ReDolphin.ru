@@ -32,9 +32,9 @@
         <li><a href="<?= BASE_URL ?>/">Главная</a></li>
         <li><a href="<?= BASE_URL ?>/files">Файлы</a></li>
       </ul>
-      <form class="search-form" action="<?= BASE_URL ?>/search" method="get">
-        <button class="search-button"><img src="<?= BASE_URL ?>/stylecontent/search-icon.png" style="vertical-align: middle"></button>
-        <span><input type="search" name="s" class="search rounded rd-search-field" placeholder="Поиск...." value=""></span>
+      <form class="searchform" action="<?= BASE_URL ?>/search" method="get">
+	    <span><input class="searchfield" type="search" name="s"  placeholder="Поиск...." value=""></span>
+	    <button class="search-button"><img src="<?= BASE_URL ?>/stylecontent/search-icon.png" style="vertical-align: middle"></button>
       </form>
     </div>
     <div class="error-wrapper">

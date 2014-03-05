@@ -18,7 +18,7 @@ require 'lib/functions.php';
 
 $app = new \Slim\Slim(array(
     'dbInfo' => $dbInfo,
-	'dbSphinx' => $dbSphinx,	
+    'dbSphinx' => $dbSphinx,
     'thumbSettings' => $thumbSettings,
     'maxFileSize' => $maxFileSize,
     'uploadPath' => $uploadPath,
@@ -60,17 +60,17 @@ $app->container->singleton('db', function() use ($app)
     return $db;
 });
 
-$app->container->singleton('dbSphinx', function() use ($app) 
+$app->container->singleton('dbSphinx', function() use ($app)
 {
-	$connetcionArray = $app->config('dbSphinx');
-	$driver          = $connetcionArray['driver'];
-	$host            = $connetcionArray['host'];
-	$port            = $connetcionArray['port'];
-	$db              = new PDO($driver . ':host=' . $host . ';port=' . $port);
-	
-	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	
-	return $db;
+    $connetcionArray = $app->config('dbSphinx');
+    $driver          = $connetcionArray['driver'];
+    $host            = $connetcionArray['host'];
+    $port            = $connetcionArray['port'];
+    $db              = new PDO($driver . ':host=' . $host . ';port=' . $port);
+    
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    return $db;
 });
 
 $app->get('/', function() use ($app)
@@ -135,14 +135,14 @@ $app->get('/files/:id', function($id) use ($app)
 {
     $fileData = new File($app->db, $app->config('host'));
     try {
-    	$fileData->findById($id);
+        $fileData->findById($id);
     }
     catch (Exception $e) {
-    	$app->notFound();
+        $app->notFound();
     }
     $app->render('file_info.php', array(
         'fileData' => $fileData,
-    	'id' => $id
+        'id' => $id
     ));
 });
 
@@ -155,7 +155,8 @@ $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($
     
     try {
         if (!preg_match($resReg, $wh, $thumbRes)) {
-            throw new ThumbnailException("Регулярное выражение {$resReg} для размера превью не соответствует ссылке.");
+            Thumbnail::errorHeader("500");
+            throw new ThumbnailException("Regular expression {$resReg} for the thumbnail size does not match the link.");
         }
         
         $thumbWidth  = $thumbRes[1];
@@ -166,10 +167,7 @@ $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($
         $resizer->getResizedImage(encodeThis($imagePath, $app->config('host')), $thumbWidth, $thumbHeight, $mode);
     }
     catch (ThumbnailException $e) {
-        $errorData = array(
-            'error' => "Ошибка сервера"
-        );
-        $app->render('server_error.php', $errorData, 500);
+        error_log($e->getMessage());
         break;
     }
 });
@@ -181,30 +179,30 @@ $app->get('/files', function() use ($app)
     
     $app->render('files_sheet.php', array(
         'files' => $files
-    )); 
+    ));
 });
 
 $app->get('/search', function() use ($app)
 {
-	$searchQuery = $_GET['s'];
-	$results = new Searcher($app->dbSphinx);
-	$results = $results->getSearchResults($searchQuery);
-	
-	$app->render('search_page.php', array(
+    $searchQuery = $_GET['s'];
+    $results     = new Searcher($app->dbSphinx);
+    $results     = $results->getSearchResults($searchQuery);
+    
+    $app->render('search_page.php', array(
         'results' => $results
     ));
 });
 
 $app->post('/delete/:id/:name', function($id, $name) use ($app)
 {
-	$delete = new File($app->db);
-	$deleteFromSearcher = new Searcher($app->dbSphinx);
-	$delete->deleteFile($id);
-	$deleteFromSearcher->delete($id);
-	
-	$app->render('deleted.php', array(
-			'name' => $name
-	));
+    $delete             = new File($app->db);
+    $deleteFromSearcher = new Searcher($app->dbSphinx);
+    $delete->deleteFile($id);
+    $deleteFromSearcher->delete($id);
+    
+    $app->render('deleted.php', array(
+        'name' => $name
+    ));
 });
 
 $app->run();
