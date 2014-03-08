@@ -90,7 +90,7 @@ class Upload
             $prettyName = $fileExt;
         }
         
-        $safeName = preg_replace('/[^a-zA-ZА-ЯЁа-яё0-9]/ui', '', $fileName) . "{$fileExt}";
+        $safeName = preg_replace('/[^a-zA-ZА-ЯЁа-яё0-9\+\-\s\)\(\)\]\[]/ui', '', $fileName) . "{$fileExt}";
         //$safeName = useTranslit($safeName);
         
         return array(
@@ -99,4 +99,3 @@ class Upload
         );
     }
 }
-?>

@@ -42,6 +42,10 @@ $app->add(new \Slim\Middleware\SessionCookie(array(
     'cipher_mode' => MCRYPT_MODE_CBC
 )));
 
+
+$app->add(new \Slim\Middleware\Translit($_GET['translit']));
+
+
 define('BASE_URL', $app->request->getRootUri());
 $app->container->singleton('db', function() use ($app)
 {
@@ -117,7 +121,7 @@ $app->post('/upload', function() use ($app)
             $thumbnail->setAllowedSizes(array(
                 "{$thumbWidth}x{$thumbHeight}"
             ));
-            $thumbLink = BASE_URL . '/' . $thumbnail->link($file->link, $thumbWidth, $thumbHeight, $thumbMode);
+            $thumbLink = $thumbnail->link($file->link, $thumbWidth, $thumbHeight, $thumbMode);
             $file->save('thumb_link', $thumbLink);
         }
         catch (ThumbnailException $e) {
@@ -149,8 +153,9 @@ $app->get('/files/:id', function($id) use ($app)
 $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($app)
 {
     $imagePath = implode('/', $img);
-    $thumbPath = dirname($imagePath);
     
+    $thumbPath = dirname($imagePath);
+    //var_dump($imagePath, $img, $thumbPath);
     $resReg = '{(\\d+)x(\\d+)}';
     
     try {
@@ -164,7 +169,8 @@ $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($
         
         $resizer = new Thumbnail("{$thumbPath}");
         // $resizer->setAllowedSizes(array("{$thumbWidth}x{$thumbHeight}"));
-        $resizer->getResizedImage(encodeThis($imagePath, $app->config('host')), $thumbWidth, $thumbHeight, $mode);
+        $header = $app->response->headers->set('Content-Type', 'image/jpeg');
+        $resizer->getResizedImage(encodeThis($imagePath, $app->config('host')), $thumbWidth, $thumbHeight, $mode, $app);
     }
     catch (ThumbnailException $e) {
         error_log($e->getMessage());
@@ -185,11 +191,21 @@ $app->get('/files', function() use ($app)
 $app->get('/search', function() use ($app)
 {
     $searchQuery = $_GET['s'];
+    $file = new File($app->db, $app->config('host'));
     $results     = new Searcher($app->dbSphinx);
     $results     = $results->getSearchResults($searchQuery);
+    $filesId = array(); 
+    foreach ($results as $value) {
+    	array_push($filesId, $value['id']);
+    }
+    $filesInfo = array();
+    foreach ($filesId as $value) {
+    	$file->findById($value);
+    	array_push($filesInfo, array($value, $file->name, Helper::formatBytes($file->size)));
+    }
     
     $app->render('search_page.php', array(
-        'results' => $results
+        'results' => $filesInfo
     ));
 });
 
@@ -206,4 +222,3 @@ $app->post('/delete/:id/:name', function($id, $name) use ($app)
 });
 
 $app->run();
-?>

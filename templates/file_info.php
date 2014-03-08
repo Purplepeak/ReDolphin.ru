@@ -26,7 +26,7 @@
     </h1>
   </div>
   <?php if ($fileData->hasThumbnail()): ?>
-  <button type="button" class="trigger"><img src="<?= spChars($fileData->thumbLink) ?>"></button> 
+  <button type="button" class="trigger"><img src="<?= BASE_URL ."/". spChars($fileData->thumbLink) ?>"></button> 
   <?php endif; ?>
   <?php if ($fileData->isMediaFile()): ?>
   <div id="rd-jplayer" class="jp-jplayer"></div>

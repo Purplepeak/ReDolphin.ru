@@ -16,4 +16,3 @@ function encodeThis($text, $host) {
 			break;
 	}
 }
-?>

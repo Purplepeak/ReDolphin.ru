@@ -17,14 +17,13 @@ class Searcher
     	$data = array(
     			'id' => $object->id,
     			'name' => $object->name,
-    			'uniqName' => $object->uniqName,
     			'type' => $object->type,
     			'date' => time(),
     			'size' => $object->size
     	);
     	
-    	$sth = $this->database->prepare("INSERT INTO {$this->rtTable} (id, file_name, uniq_name, file_type, create_date, file_size) 
-				                        VALUES (:id, :name, :uniqName, :type, :date, :size)");
+    	$sth = $this->database->prepare("INSERT INTO {$this->rtTable} (id, file_name, file_type, create_date, file_size) 
+				                        VALUES (:id, :name, :type, :date, :size)");
     	
     	$sth->execute($data);
     }
@@ -41,7 +40,7 @@ class Searcher
     }
     
     public function delete($id) {
-    	$sth = $this->database->prepare("DELETE FROM {$this->rtTable} WHERE id IN ({$id})");
+    	$sth = $this->database->prepare("DELETE FROM {$this->rtTable} WHERE id = {$id}");
     	$sth->execute();
     }
 }

@@ -9,4 +9,3 @@ class ThumbnailException extends Exception
 		return "{$this->getMessage()} {$this->getTraceAsString()}";
 	}
 }
-?>

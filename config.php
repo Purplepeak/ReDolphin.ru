@@ -21,5 +21,4 @@ $thumbSettings = array(
 
 $maxFileSize = 60;
 $uploadPath = 'uploads'; // Папка для сохранения пользовательских файлов.
-$host = 'linux'; // windows или linux
-?>
+$host = 'windows'; // windows или linux

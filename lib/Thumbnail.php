@@ -58,25 +58,25 @@ class Thumbnail
      * Метод сохраняет превью в папку назначения.
      */
     
-    private function saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $imageName)
+    private function saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $imageName, $app)
     {
     	$thumbImagePath = $this->thumbPath. "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$imageName}";
     	
         switch($type) {
  	        case "image/jpeg":
- 				self::errorHeader("200");
+ 				$app->response->setStatus(200);
  				imagejpeg($thumb, $thumbImagePath);
- 				header('Content-Type: image/jpeg');
+ 				$app->response->headers->set('Content-Type', 'image/jpeg');
  				break;
  			case "image/png":
- 				self::errorHeader("200");
+ 				$app->response->setStatus(200);
  				imagepng($thumb, $thumbImagePath);
- 				header('Content-Type: image/png');
+ 				$app->response->headers->set('Content-Type', 'image/png');
  				break;
  			case "image/gif":
- 				self::errorHeader("200");
+ 				$app->response->setStatus(200);
  				imagegif($thumb, $thumbImagePath);
- 				header('Content-Type: image/gif');
+ 				$app->response->headers->set('Content-Type', 'image/gif');
  				break;
  			default:
  				throw new ThumbnailException("Invalid image type: $type");
@@ -86,7 +86,7 @@ class Thumbnail
  		readfile($thumbImagePath);
     }
     
-    public function getResizedImage($image, $thumbWidth, $thumbHeight, $mode)
+    public function getResizedImage($image, $thumbWidth, $thumbHeight, $mode, $app)
     {
         $srcPath = dirname($image);
         $dir     = $this->thumbPath . "/{$thumbWidth}x{$thumbHeight}/{$mode}/{$srcPath}";
@@ -163,7 +163,7 @@ class Thumbnail
         }
         
         
-        $this->saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $image);
+        $this->saveImage($thumb, $type, $thumbWidth, $thumbHeight, $mode, $image, $app);
     }
     
     public function setAllowedSizes($allowedSizes)
@@ -206,4 +206,3 @@ class Thumbnail
         return $thumb;
     }
 }
-?>

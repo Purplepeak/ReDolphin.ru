@@ -44,5 +44,4 @@ class UploadException extends Exception
         } 
         return $message; 
     } 
-} 
-?>
+}
