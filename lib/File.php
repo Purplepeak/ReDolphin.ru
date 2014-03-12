@@ -17,7 +17,7 @@ class File
     public function __construct($database, $host = null)
     {
         $this->database = $database;
-        $this->host = $host;
+        $this->host     = $host;
     }
     
     public function saveData()
@@ -32,8 +32,8 @@ class File
             'link' => ''
         );
         $sth  = $this->database->prepare("
-				                        INSERT INTO {$this->table} (file_id, file_name, uniq_name, file_type, create_date, file_size, link) 
-				                        VALUE (:id, :name, :uniqName, :type, :date, :size, :link)");
+                                        INSERT INTO {$this->table} (file_id, file_name, uniq_name, file_type, create_date, file_size, link) 
+                                        VALUE (:id, :name, :uniqName, :type, :date, :size, :link)");
         $sth->execute($data);
         $id       = $this->database->lastInsertId();
         $this->id = $id;
@@ -43,14 +43,14 @@ class File
     {
         
         $sth = $this->database->prepare("
-				                      SELECT file_id, file_name, uniq_name, file_type, UNIX_TIMESTAMP(create_date) AS create_date, file_size, link, thumb_link  
-				                      FROM {$this->table} WHERE file_id = :id");
+                                      SELECT file_id, file_name, uniq_name, file_type, UNIX_TIMESTAMP(create_date) AS create_date, file_size, link, thumb_link  
+                                      FROM {$this->table} WHERE file_id = :id");
         $sth->bindParam(':id', $id);
         $sth->execute();
         $sth->setFetchMode(PDO::FETCH_ASSOC);
-        $row             = $sth->fetch();
+        $row = $sth->fetch();
         if (!$row) {
-        	throw new Exception("File with id: {$id} not found");
+            throw new Exception("File with id: {$id} not found");
         }
         $this->name      = $row['file_name'];
         $this->uniqName  = $row['uniq_name'];
@@ -98,7 +98,7 @@ class File
         $results = array_reverse($results);
         
         if ($count > 100) {
-        	$results = array_slice($results, 0, 100);
+            $results = array_slice($results, 0, 100);
         }
         
         return $results;
@@ -106,84 +106,87 @@ class File
     
     public function deleteFile($id)
     {
-    	$sth = $this->database->prepare("DELETE FROM {$this->table} WHERE file_id= :id");
-    	$sth->bindParam(':id', $id);
-    	$sth->execute();
+        $sth = $this->database->prepare("DELETE FROM {$this->table} WHERE file_id= :id");
+        $sth->bindParam(':id', $id);
+        $sth->execute();
     }
     
     public function isMediaFile()
     {
-    	$finfo = new finfo(FILEINFO_MIME_TYPE);
-    	$mime = $finfo->file(encodeThis($this->link, $this->host));
-    	$allowedMedia = array (
-    			'audio/mpeg',
-    			'audio/mp4',
-    			'audio/ogg',
-    			'audio/wav',
-    			'audio/webm'
-    	);
-    	foreach ($allowedMedia as $value) {
-    		if ($mime == $value) {
-    			$fileExtension = pathinfo($this->link);
-    			return $fileExtension['extension'];
-    		}
-    	}
+        $finfo        = new finfo(FILEINFO_MIME_TYPE);
+        $mime         = $finfo->file(encodeThis($this->link, $this->host));
+        $allowedMedia = array(
+            'audio/mpeg',
+            'audio/mp4',
+            'audio/ogg',
+            'audio/wav',
+            'audio/webm'
+        );
+        foreach ($allowedMedia as $value) {
+            if ($mime == $value) {
+                $fileExtension = pathinfo($this->link);
+                return $fileExtension['extension'];
+            }
+        }
     }
     
-    public function getMenyFiles(array $id) {
-    	$inQuery = implode(',', array_fill(0, count($id), '?'));
-    	$sth = $this->database->prepare("SELECT * FROM {$this->table} WHERE file_id IN({$inQuery})");
-    	$sth->execute($id);
-    	$sth->setFetchMode(PDO::FETCH_ASSOC);
-    	$results = $sth->fetchAll();
-    	
-    	$objArray = array();
-    	foreach ($results as $value) {
-    		$object = new self($this->database);
-    		$object->id      = $value['file_id'];
-    		$object->name      = $value['file_name'];
+    public function getMenyFiles(array $id)
+    {
+        $inQuery = implode(',', array_fill(0, count($id), '?'));
+        $sth     = $this->database->prepare("SELECT * FROM {$this->table} WHERE file_id IN({$inQuery})");
+        $sth->execute($id);
+        $sth->setFetchMode(PDO::FETCH_ASSOC);
+        $results = $sth->fetchAll();
+        
+        $objArray = array();
+        foreach ($results as $value) {
+            $object            = new self($this->database);
+            $object->id        = $value['file_id'];
+            $object->name      = $value['file_name'];
             $object->uniqName  = $value['uniq_name'];
             $object->type      = $value['file_type'];
             $object->date      = $value['create_date'];
             $object->size      = $value['file_size'];
             $object->link      = $value['link'];
             $object->thumbLink = $value['thumb_link'];
-    		array_push($objArray, $object);
-    	}
-    	
-    	return $objArray;
+            array_push($objArray, $object);
+        }
+        
+        return $objArray;
     }
     
-    public function deleteFolder($dir) {
-    	if (is_dir($dir)) {
-    		$objects = scandir($dir);
-    		foreach ($objects as $object) {
-    			if ($object != '.' && $object != '..') {
-    				if (is_dir($dir . '/' . $object)) {
-    					self::deleteFolder($dir . '/' . $object);
-    				}
-    				else {
-    					unlink($dir . '/' . $object);
-    				}
-    			}
-    		}
-    		rmdir($dir);
-    	}
+    public function deleteFolder($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != '.' && $object != '..') {
+                    if (is_dir($dir . '/' . $object)) {
+                        self::deleteFolder($dir . '/' . $object);
+                    } else {
+                        unlink($dir . '/' . $object);
+                    }
+                }
+            }
+            rmdir($dir);
+        }
     }
     
-    public function isFileOwner($id, $session) {
-    	foreach($_SESSION['userfiles'] as $value) {
-    		if ($value === $id) {
-    			return true;
-    		}
-    	}
+    public function isFileOwner($id, $session)
+    {
+        foreach ($_SESSION['userfiles'] as $value) {
+            if ($value === $id) {
+                return true;
+            }
+        }
     }
     
-    public function deleteFromSession($id, $session) {
-    	foreach($session as $key => $value) {
-    		if ($value === $id) {
-    			unset($_SESSION['userfiles'][$key]);
-    		}
-    	}
+    public function deleteFromSession($id, $session)
+    {
+        foreach ($session as $key => $value) {
+            if ($value === $id) {
+                unset($_SESSION['userfiles'][$key]);
+            }
+        }
     }
 }
