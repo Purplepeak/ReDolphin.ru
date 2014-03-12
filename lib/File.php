@@ -171,7 +171,7 @@ class File
     	}
     }
     
-    public function isFileOwner($id) {
+    public function isFileOwner($id, $session) {
     	foreach($_SESSION['userfiles'] as $value) {
     		if ($value === $id) {
     			return true;
@@ -179,8 +179,8 @@ class File
     	}
     }
     
-    public function deleteFromSession($id) {
-    	foreach($_SESSION['userfiles'] as $key => $value) {
+    public function deleteFromSession($id, $session) {
+    	foreach($session as $key => $value) {
     		if ($value === $id) {
     			unset($_SESSION['userfiles'][$key]);
     		}
