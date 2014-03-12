@@ -135,8 +135,11 @@ $app->post('/upload', function() use ($app)
     }
     $searcher = new Searcher($app->dbSphinx);
     $searcher->updateRtIndex($file);
-    
-    array_push($_SESSION['userfiles'], $file->id);
+    if (count($_SESSION) == 1) {
+    	$_SESSION['userfiles'] = array($file->id);
+    } else {
+    	array_push($_SESSION['userfiles'], $file->id);
+    }
     
     $app->redirect(BASE_URL . "/files/{$file->id}");
 });
