@@ -223,7 +223,9 @@ $app->post('/delete/:id/:name', function($id, $name) use ($app)
     $deleteFromSearcher = new Searcher($app->dbSphinx);
     $filePath = $app->config('uploadPath') .'/'. $id;
     $delete->deleteFolder($filePath);
-    $delete->deleteFromSession($id);
+    if (isset($_SESSION['userfiles'])) {
+    	$delete->deleteFromSession($id, $_SESSION['userfiles']);
+    }
     $delete->deleteFile($id);
     $deleteFromSearcher->delete($id);
     
