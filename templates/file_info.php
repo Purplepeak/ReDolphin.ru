@@ -26,7 +26,12 @@
     </h1>
   </div>
   <?php if ($fileData->hasThumbnail()): ?>
-  <button type="button" class="trigger"><img src="<?= BASE_URL ."/". spChars($fileData->thumbLink) ?>"></button> 
+  <?php 
+      $thumbPath = pathinfo($fileData->thumbLink);
+      $dirPath = $thumbPath['dirname'];
+      $thumbName = urlencode($thumbPath['basename']);
+  ?>
+  <button type="button" class="trigger"><img src="<?= BASE_URL ."/". $dirPath ."/". $thumbName?>"></button>
   <?php endif; ?>
   <?php if ($fileData->isMediaFile()): ?>
   <div id="rd-jplayer" class="jp-jplayer"></div>
@@ -72,12 +77,14 @@
   <?php endif; ?>
   <div class="rd-buttons">
   <a class="rd-button" href="<?= BASE_URL ."/". spChars($fileData->link) ?>">Скачать</a>
-  <form name = "delete-form" class="delete-form"  enctype="multipart/form-data" action="<?= BASE_URL ?>/delete/<?= spChars($id) ?>/<?= spChars($fileData->name) ?>"  method="POST" >
-    <input type="submit" value="Удалить" class="delete-btn">
-  </form>
+  <?php if ($fileData->isFileOwner($id)): ?>
+    <form name = "delete-form" class="delete-form"  enctype="multipart/form-data" action="<?= BASE_URL ?>/delete/<?= spChars($id) ?>/<?= spChars($fileData->name) ?>"  method="POST" >
+      <input type="submit" value="Удалить" class="delete-btn">
+    </form>
+  <?php endif; ?>
   </div>
   <div class="file-info">
-    <p>Дата загрузки: <?= spChars($fileData->date) ?></p>
+    <p>Дата загрузки: <?= date('Y-m-d G:i:s', spChars($fileData->date)) ?></p>
   </div>
   <!--  
     <div class="maxImageWidth"></div>

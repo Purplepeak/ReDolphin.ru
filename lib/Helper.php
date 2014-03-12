@@ -15,8 +15,6 @@ class Helper
         return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
     }
     
-    
-    
     public static function getEnding($number, $endingArray)
     {
         $number = $number % 100;
@@ -39,6 +37,10 @@ class Helper
             }
         }
         return $ending;
+    }
+    
+    public static function encodeUrl($url) {
+    	
     }
     
     public static function useTranslit($name)

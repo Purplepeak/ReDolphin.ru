@@ -43,7 +43,7 @@ class File
     {
         
         $sth = $this->database->prepare("
-				                      SELECT file_id, file_name, uniq_name, file_type, create_date, file_size, link, thumb_link  
+				                      SELECT file_id, file_name, uniq_name, file_type, UNIX_TIMESTAMP(create_date) AS create_date, file_size, link, thumb_link  
 				                      FROM {$this->table} WHERE file_id = :id");
         $sth->bindParam(':id', $id);
         $sth->execute();
@@ -126,6 +126,63 @@ class File
     		if ($mime == $value) {
     			$fileExtension = pathinfo($this->link);
     			return $fileExtension['extension'];
+    		}
+    	}
+    }
+    
+    public function getMenyFiles(array $id) {
+    	$inQuery = implode(',', array_fill(0, count($id), '?'));
+    	$sth = $this->database->prepare("SELECT * FROM {$this->table} WHERE file_id IN({$inQuery})");
+    	$sth->execute($id);
+    	$sth->setFetchMode(PDO::FETCH_ASSOC);
+    	$results = $sth->fetchAll();
+    	
+    	$objArray = array();
+    	foreach ($results as $value) {
+    		$object = new self($this->database);
+    		$object->id      = $value['file_id'];
+    		$object->name      = $value['file_name'];
+            $object->uniqName  = $value['uniq_name'];
+            $object->type      = $value['file_type'];
+            $object->date      = $value['create_date'];
+            $object->size      = $value['file_size'];
+            $object->link      = $value['link'];
+            $object->thumbLink = $value['thumb_link'];
+    		array_push($objArray, $object);
+    	}
+    	
+    	return $objArray;
+    }
+    
+    public function deleteFolder($dir) {
+    	if (is_dir($dir)) {
+    		$objects = scandir($dir);
+    		foreach ($objects as $object) {
+    			if ($object != '.' && $object != '..') {
+    				if (is_dir($dir . '/' . $object)) {
+    					self::deleteFolder($dir . '/' . $object);
+    				}
+    				else {
+    					unlink($dir . '/' . $object);
+    				}
+    			}
+    		}
+    		rmdir($dir);
+    	}
+    }
+    
+    public function isFileOwner($id) {
+    	foreach($_SESSION['userfiles'] as $value) {
+    		if ($value === $id) {
+    			return true;
+    		}
+    	}
+    }
+    
+    public function deleteFromSession($id) {
+    	foreach($_SESSION['userfiles'] as $key => $value) {
+    		if ($value === $id) {
+    			unset($_SESSION['userfiles'][$key]);
     		}
     	}
     }

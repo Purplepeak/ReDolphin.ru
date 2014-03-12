@@ -22,7 +22,11 @@ $app = new \Slim\Slim(array(
     'thumbSettings' => $thumbSettings,
     'maxFileSize' => $maxFileSize,
     'uploadPath' => $uploadPath,
-    'host' => $host
+    'host' => $host,
+	'cookies.encrypt' => true,
+	'cookies.secret_key' => 'hjhfyr289NiOj',
+	'cookies.cipher' => MCRYPT_RIJNDAEL_256,
+	'cookies.cipher_mode' => MCRYPT_MODE_CBC
 ));
 
 $app->notFound(function() use ($app)
@@ -31,7 +35,7 @@ $app->notFound(function() use ($app)
 });
 
 $app->add(new \Slim\Middleware\SessionCookie(array(
-    'expires' => '20 minutes',
+    'expires' => '6 month',
     'path' => '/',
     'domain' => null,
     'secure' => false,
@@ -43,7 +47,7 @@ $app->add(new \Slim\Middleware\SessionCookie(array(
 )));
 
 
-$app->add(new \Slim\Middleware\Translit($_GET['translit']));
+//$app->add(new \Slim\Middleware\Translit($_GET['translit']));
 
 
 define('BASE_URL', $app->request->getRootUri());
@@ -132,6 +136,8 @@ $app->post('/upload', function() use ($app)
     $searcher = new Searcher($app->dbSphinx);
     $searcher->updateRtIndex($file);
     
+    array_push($_SESSION['userfiles'], $file->id);
+    
     $app->redirect(BASE_URL . "/files/{$file->id}");
 });
 
@@ -153,7 +159,6 @@ $app->get('/files/:id', function($id) use ($app)
 $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($app)
 {
     $imagePath = implode('/', $img);
-    
     $thumbPath = dirname($imagePath);
     //var_dump($imagePath, $img, $thumbPath);
     $resReg = '{(\\d+)x(\\d+)}';
@@ -169,7 +174,7 @@ $app->get('/uploads/:id/:wh/:mode/:img+', function($id, $wh, $mode, $img) use ($
         
         $resizer = new Thumbnail("{$thumbPath}");
         // $resizer->setAllowedSizes(array("{$thumbWidth}x{$thumbHeight}"));
-        $header = $app->response->headers->set('Content-Type', 'image/jpeg');
+        
         $resizer->getResizedImage(encodeThis($imagePath, $app->config('host')), $thumbWidth, $thumbHeight, $mode, $app);
     }
     catch (ThumbnailException $e) {
@@ -194,15 +199,15 @@ $app->get('/search', function() use ($app)
     $file = new File($app->db, $app->config('host'));
     $results     = new Searcher($app->dbSphinx);
     $results     = $results->getSearchResults($searchQuery);
-    $filesId = array(); 
-    foreach ($results as $value) {
-    	array_push($filesId, $value['id']);
-    }
     $filesInfo = array();
-    foreach ($filesId as $value) {
-    	$file->findById($value);
-    	array_push($filesInfo, array($value, $file->name, Helper::formatBytes($file->size)));
+    if (!empty($results)) {
+    	$filesId = array();
+    	foreach ($results as $value) {
+    		array_push($filesId, $value['id']);
+    	}
+    	$filesInfo = $file->getMenyFiles($filesId);
     }
+    
     
     $app->render('search_page.php', array(
         'results' => $filesInfo
@@ -213,12 +218,20 @@ $app->post('/delete/:id/:name', function($id, $name) use ($app)
 {
     $delete             = new File($app->db);
     $deleteFromSearcher = new Searcher($app->dbSphinx);
+    $filePath = $app->config('uploadPath') .'/'. $id;
+    $delete->deleteFolder($filePath);
+    $delete->deleteFromSession($id);
     $delete->deleteFile($id);
     $deleteFromSearcher->delete($id);
     
     $app->render('deleted.php', array(
         'name' => $name
     ));
+});
+
+$app->get('/debug', function() use($app) 
+{
+    var_dump($_COOKIE, $_SESSION);
 });
 
 $app->run();

@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 $dbInfo = array(
 	'dbDriver' => 'mysql',
 	'dbHost' => '127.0.0.1',

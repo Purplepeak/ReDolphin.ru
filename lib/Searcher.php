@@ -40,8 +40,8 @@ class Searcher
     }
     
     public function delete($id) {
-    	$sth = $this->database->prepare("DELETE FROM {$this->rtTable} WHERE id = {$id}");
-    	$sth->execute();
+    	$sth = $this->database->prepare("DELETE FROM {$this->rtTable} WHERE id = ?");
+    	$sth->execute(array($id));
     }
 }
 ?>
