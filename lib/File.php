@@ -174,7 +174,7 @@ class File
     
     public function isFileOwner($id, $session)
     {
-        foreach ($_SESSION['userfiles'] as $value) {
+        foreach ($session as $value) {
             if ($value === $id) {
                 return true;
             }
@@ -185,7 +185,7 @@ class File
     {
         foreach ($session as $key => $value) {
             if ($value === $id) {
-                unset($_SESSION['userfiles'][$key]);
+                unset($session[$key]);
             }
         }
     }
