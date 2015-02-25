@@ -14,19 +14,13 @@ source base
 
 source src_files: base
 {
-    # Âêëþ÷àåì range (âûáîðêó áîëüøèõ òàáëèö ïî ÷àñòÿì)
     sql_range_step          = 1000
  
-    # çàïðîñ íà âûáîðêó äèàïàçîíà id
     sql_query_range         = SELECT MIN(file_id), MAX(file_id) FROM files
- 
-    # çàïðîñ íà âûáîðêó ñàìèõ íîâîñòåé äëÿ èíäåêñàöèè
-    # ñôèíêñ ïîíèìàåò äàòû òîëüêî â âèäå ÷èñëà, òàê ÷òî ïðåîáðàçóåì äàòó â timestamp   
+   
     sql_query       = \
  SELECT file_id AS id, file_name, file_type, UNIX_TIMESTAMP(create_date) AS create_date, file_size, link, thumb_link \
  FROM files WHERE file_id BETWEEN $start AND $end
-        
-    # Ñîõðàíÿåì äëÿ êàæäîé íîâîñòè åå topic è äàòó â àòòðèáóòû
     
     sql_attr_timestamp  = create_date
     sql_attr_uint       = file_size
@@ -35,12 +29,8 @@ source src_files: base
 index index_files
 {
     source = src_files
-    # ãäå õðàíèòü äàííûå
-    # íå çíàþ, êàê ïèñàòü îòíîñèòåëüíûé ïóòü, ïîòîìó ïèøó àáñîëþòíûé
     path = c:/sphinx/data/files
-    # ãäå õðàíèòü àòòðèáóòû — â èíäåêñå (inline) èëè îòäåëüíîì ôàéëå (extern)
     docinfo = extern
-    # Ëèáî sbcs (1-áàéòîâàÿ êîäèðîâêà) ëèáî utf-8
     charset_table = 0..9, A..Z->a..z, a..z, \
     U+410..U+42F->U+430..U+44F, U+430..U+44F, U+401->U+0435, U+451->U+0435
     
@@ -52,7 +42,6 @@ index rt_files
     type = rt
     path = c:/sphinx/data/rt_files
 
-    # Íàäî îïèñûâàòü âñå âîçìîæíûå ïîëÿ äëÿ èíäåêñèðîâàíèÿ
     rt_field = file_name
     rt_field = file_type
 
@@ -60,7 +49,6 @@ index rt_files
     rt_attr_uint = create_date
     rt_attr_uint = file_size
 
-    # Ñêîëüêî ïàìÿòè îòâåäåì ïîä èíäåêñ (÷òî íå ïîìåñòèòñÿ, áóäåò õðàíèòüñÿ íà äèñêå)
     rt_mem_limit = 25M
 }
 
@@ -71,12 +59,9 @@ indexer
 
 searchd
 {
-    # íà êàêèõ ïîðòàõ ñëóøàòü ñ áèíàðíûì ïðîòêîëîì
     listen          = 9312
-    # è ñ mysql-ïðîòîêîëîì
     listen          = 9306:mysql41
  
-    # Êóäà êëàñòü ëîãè
     log         = c:/sphinx/log/searchd.log
     query_log       = c:/sphinx/log/query.log
  
